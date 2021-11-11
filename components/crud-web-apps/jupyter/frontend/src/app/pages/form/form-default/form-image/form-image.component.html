@@ -26,7 +26,8 @@
         attr.aria-label="Use JupyterLab based server"
         i18n-aria-label="Aria label for JupyterLab type server"
       >
-        <mat-icon class="server-type" svgIcon="jupyterlab"></mat-icon>
+        <mat-label class="server-type-label">C P U </mat-label>
+<!--    <mat-icon class="server-type" svgIcon="jupyterlab"></mat-icon>-->
       </mat-button-toggle>
 
       <mat-button-toggle
@@ -34,12 +35,14 @@
         attr.aria-label="Use Group One based server"
         i18n-aria-label="Aria label for Group One server"
       >
-        <mat-icon class="server-type" svgIcon="group-one"></mat-icon>
+        <mat-label class="server-type-label">G P U </mat-label>
+<!--    <mat-icon class="server-type" svgIcon="group-one"></mat-icon>-->
       </mat-button-toggle>
       <mat-button-toggle
         value="group-two"
         attr.aria-label="Use Group Two based server"
         i18n-aria-label="Aria label for Group Two server"
+        style="display: none;"
       >
         <mat-icon class="server-type" svgIcon="group-two"></mat-icon>
       </mat-button-toggle>

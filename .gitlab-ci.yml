@@ -1,0 +1,63 @@
+variables:
+  MAJOR_VERSION: "0"
+  MINOR_VERSION: "1"
+  ORGANIZATION_NAME: "artificial-intelligence"
+  TEAM_NAME: "ai-platform"
+
+.build_templatized_docker_image:
+  variables:
+    DOCKERFILE: "components/crud-web-apps"
+  before_script: &build_templatized_docker_image_before_script
+    # Turn on debug logging to output commands with vars to make local testing easier.
+    - set -x
+    # TODO AIP-653 Remove gawk installation, hopefully push this down to Gitlab default image,
+    # see this thread: https://zillowgroup.slack.com/archives/CJ0F4LBE3/p1603908051284200
+    - apt-get update && apt-get install -yq --no-install-recommends gawk
+    # Turn on timestamp logging per log line to get fine grained timing debug data.
+    - |
+      logging_pipe=/tmp/$$.logging
+      mkfifo $logging_pipe
+      awk '{ gsub(/%/, "%%"); printf "\033[2m[" strftime("%H:%M:%S") "]\033[0m " $0 "\n" }' <$logging_pipe&
+      exec >$logging_pipe 2>&1
+      rm $logging_pipe
+    - ARTIFACT_NAME="jupyter-web-app"
+    # Inject org & team names to conform to AIP naming conventions that make it possible to set
+    # permissions and retention policies at each level.
+    - IMAGE_REPOSITORY_PREFIX="${DOCKER_REPO_URL}/${ORGANIZATION_NAME}/${TEAM_NAME}"
+    # Ensure image tag is unique for each commit so we invalidate caching on machines pulling images.
+    - IMAGE_TAG="${MAJOR_VERSION}.${MINOR_VERSION}.${CI_COMMIT_SHORT_SHA}.${CI_COMMIT_REF_SLUG}"
+    # Actually set up the naming for the image we're currently building.
+    - IMAGE_REPOSITORY="${IMAGE_REPOSITORY_PREFIX}/${ARTIFACT_NAME}"
+    - IMAGE_REPOSITORY_TAG="${IMAGE_REPOSITORY}:${IMAGE_TAG}"
+    # Produce short version of prior commit SHA to keep same image format.
+    - CI_COMMIT_BEFORE_SHORT_SHA="${CI_COMMIT_BEFORE_SHA:0:8}"
+    - PREV_COMMIT_IMAGE_TAG="${MAJOR_VERSION}.${MINOR_VERSION}.${CI_COMMIT_BEFORE_SHORT_SHA}.${CI_COMMIT_REF_SLUG}"
+    # Specify the image from the previous commit as a source for the cache in case the image
+    # doesn't exist on the build machine anymore.
+    - PREV_COMMIT_IMAGE_REPOSITORY_TAG="${IMAGE_REPOSITORY}:${PREV_COMMIT_IMAGE_TAG}"
+  script:
+    - |
+      DOCKER_BUILDKIT=1 docker build \
+        --cache-from "${PREV_COMMIT_IMAGE_REPOSITORY_TAG}" \
+        --build-arg BUILDKIT_INLINE_CACHE=1 \
+        --build-arg "IMAGE_REPOSITORY_TAG=${IMAGE_REPOSITORY_TAG}" \
+        -t ${IMAGE_REPOSITORY_TAG} \
+        ${DOCKERFILE}
+    - echo ${DOCKER_API_KEY} | docker login -u ${DOCKER_USERNAME} --password-stdin ${DOCKER_REPO_URL}
+    - docker push ${IMAGE_REPOSITORY_TAG}
+    # Print out some profiling information to make debugging image size easier.
+    - docker history ${IMAGE_REPOSITORY_TAG} --no-trunc
+    - |
+      echo "Total image size: $(docker images ${IMAGE_REPOSITORY_TAG} --format '{{.Size}}')"
+    - |
+      echo "Built and pushed: ${IMAGE_REPOSITORY_TAG}"
+  tags:
+    - build
+
+stages:
+  - build:jupyter-web-app
+
+build_customize:
+  extends:
+  - .build_templatized_docker_image
+  stage: build:jupyter-web-app
