@@ -42,7 +42,7 @@ variables:
         --build-arg BUILDKIT_INLINE_CACHE=1 \
         --build-arg "IMAGE_REPOSITORY_TAG=${IMAGE_REPOSITORY_TAG}" \
         -t ${IMAGE_REPOSITORY_TAG} \
-        -f ${DOCKERFILE}/jupyter \
+        -f ${DOCKERFILE}/jupyter/Dockerfile \
         ${DOCKERFILE}
     - echo ${DOCKER_API_KEY} | docker login -u ${DOCKER_USERNAME} --password-stdin ${DOCKER_REPO_URL}
     - docker push ${IMAGE_REPOSITORY_TAG}
