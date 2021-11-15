@@ -6,7 +6,7 @@ variables:
 
 .build_templatized_docker_image:
   variables:
-    DOCKERFILE: "components/crud-web-apps/jupyter"
+    DOCKERFILE: "components/crud-web-apps"
   before_script: &build_templatized_docker_image_before_script
     # Turn on debug logging to output commands with vars to make local testing easier.
     - set -x
@@ -37,12 +37,12 @@ variables:
     - PREV_COMMIT_IMAGE_REPOSITORY_TAG="${IMAGE_REPOSITORY}:${PREV_COMMIT_IMAGE_TAG}"
   script:
     - |
-      cd .. && \
       DOCKER_BUILDKIT=1 docker build \
         --cache-from "${PREV_COMMIT_IMAGE_REPOSITORY_TAG}" \
         --build-arg BUILDKIT_INLINE_CACHE=1 \
         --build-arg "IMAGE_REPOSITORY_TAG=${IMAGE_REPOSITORY_TAG}" \
         -t ${IMAGE_REPOSITORY_TAG} \
+        -f ${DOCKERFILE}/jupyter \
         ${DOCKERFILE}
     - echo ${DOCKER_API_KEY} | docker login -u ${DOCKER_USERNAME} --password-stdin ${DOCKER_REPO_URL}
     - docker push ${IMAGE_REPOSITORY_TAG}
