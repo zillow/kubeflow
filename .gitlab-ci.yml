@@ -17,7 +17,7 @@ variables:
     - |
       logging_pipe=/tmp/$$.logging
       mkfifo $logging_pipe
-      awk '{ gsub(/%/, "%%"); printf "\033[2m[" strftime("%H:%M:%S") "]\033[0m " $0 "\n" }' <$logging_pipe&
+      gawk '{ gsub(/%/, "%%"); printf "\033[2m[" strftime("%H:%M:%S") "]\033[0m " $0 "\n" }' <$logging_pipe&
       exec >$logging_pipe 2>&1
       rm $logging_pipe
     - ARTIFACT_NAME="jupyter-web-app"
