@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Config, Volume, NotebookFormObject } from 'src/app/types';
+import { Config, NotebookFormObject } from 'src/app/types';
 import { Subscription } from 'rxjs';
 import {
   NamespaceService,
@@ -29,7 +29,6 @@ export class FormDefaultComponent implements OnInit, OnDestroy {
 
   blockSubmit = false;
   formReady = false;
-  pvcs: Volume[] = [];
   existingNotebooks = new Set<string>();
 
   subscriptions = new Subscription();
@@ -61,11 +60,6 @@ export class FormDefaultComponent implements OnInit, OnDestroy {
       this.namespaceService.getSelectedNamespace().subscribe(namespace => {
         this.currNamespace = namespace;
         this.formCtrl.controls.namespace.setValue(this.currNamespace);
-
-        // Get the PVCs of the new Namespace
-        this.backend.getVolumes(namespace).subscribe(pvcs => {
-          this.pvcs = pvcs;
-        });
       }),
     );
 
@@ -175,9 +169,16 @@ export class FormDefaultComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
+    this.popup.open('Submitting new Notebook...', SnackType.Info, 3000);
+
     const notebook = this.getSubmitNotebook();
     this.backend.createNotebook(notebook).subscribe(() => {
       this.popup.close();
+      this.popup.open(
+        'Notebook created successfully.',
+        SnackType.Success,
+        3000,
+      );
       this.router.navigate(['/']);
     });
   }
