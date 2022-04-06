@@ -1,1 +1,2 @@
+kubernetes==v22.6.0
 gunicorn
