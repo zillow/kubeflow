@@ -19,7 +19,6 @@ export class FormGpusComponent implements OnInit {
   subscriptions = new Subscription();
   maxGPUs = 16;
   gpusCount = ['1', '2', '4', '8'];
-  defaultGPU = 'None'
 
   constructor(public backend: JWABackendService) {}
 
