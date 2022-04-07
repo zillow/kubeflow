@@ -33,7 +33,7 @@ export class FormGpusComponent implements OnInit {
 
     this.subscriptions.add(
       this.gpuCtrl.get('num').valueChanges.subscribe((n: string) => {
-        if (n === '') {
+        if (n === "") {
           this.gpuCtrl.get('vendor').disable();
         } else {
           this.gpuCtrl.get('vendor').enable();
@@ -69,7 +69,7 @@ export class FormGpusComponent implements OnInit {
       const num = this.parentForm.get('gpus').get('num').value;
       const vendor = this.parentForm.get('gpus').get('vendor').value;
 
-      if (num !== 'none' && vendor === '') {
+      if (num !== "" && vendor === '') {
         return { vendorNullName: true };
       } else {
         return null;
