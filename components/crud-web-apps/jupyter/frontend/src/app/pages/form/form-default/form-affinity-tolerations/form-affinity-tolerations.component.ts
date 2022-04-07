@@ -20,7 +20,7 @@ export class FormAffinityTolerationsComponent implements OnInit {
     this.affinityCtrl = this.parentForm.get('affinityTolerations') as FormGroup;
 
     // set default affinity to NONE
-    const defaultAffinity = this.parentForm.get('affinityTolerations').get('affinity').find(a => a.displayName === 'None');
+    const defaultAffinity = this.parentForm.get('affinityTolerations').get('affinity').get(a => a.displayName === 'None');
     this.affinityCtrl.get('affinity').setValue(defaultAffinity);
   }
 }

@@ -34,7 +34,7 @@ export class FormGpusComponent implements OnInit {
     this.gpuCtrl.get('num').setValue('none');
 
     // set default vendor to NVIDIA
-    const defaultVendor = this.parentForm.get('gpus').get('vendor').find(v => v.uiName === 'NVIDIA');
+    const defaultVendor = this.parentForm.get('gpus').get('vendor').get(v => v.uiName === 'NVIDIA');
     this.gpuCtrl.get('vendor').setValue(defaultVendor);
 
     this.subscriptions.add(
