@@ -265,7 +265,7 @@ def set_notebook_gpus(notebook, body, defaults):
     if "num" not in gpus:
         raise BadRequest("'gpus' must have a 'num' field")
 
-    if gpus["num"] == "none":
+    if gpus["num"] == "":
         return
 
     if "vendor" not in gpus:
