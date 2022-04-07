@@ -14,7 +14,7 @@
     <!--GPUs Vendor-->
     <mat-form-field class="column" appearance="outline">
       <mat-label i18n>GPU Vendor</mat-label>
-      <mat-select matNativeControl formControlName="vendor" id="gpu-vendor" [value]="v.uiName">
+      <mat-select matNativeControl formControlName="vendor" id="gpu-vendor">
         <mat-option
           *ngFor="let v of vendors"
           [value]="v.limitsKey"
