@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { TolerationGroup, AffinityConfig } from 'src/app/types';
 
 @Component({
@@ -13,11 +13,13 @@ export class FormAffinityTolerationsComponent implements OnInit {
   @Input() affinityConfigs: AffinityConfig[];
 
   private affinityCtrl: FormGroup;
+  private defaultAffinity = 'None'
 
-  constructor() {}
-
-  ngOnInit() {
-    this.affinityCtrl = this.parentForm.get('affinityTolerations') as FormGroup;
-    this.affinityCtrl.controls['affinity'].setValue('None');
+  constructor(private fb: FormBuilder) {
+    this.affinityCtrl = fb.group({
+      affinity: [this.defaultAffinity, [Validators.required]],
+    })
   }
+
+  ngOnInit() {}
 }

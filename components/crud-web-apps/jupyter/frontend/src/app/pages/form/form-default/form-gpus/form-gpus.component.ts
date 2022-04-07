@@ -33,7 +33,7 @@ export class FormGpusComponent implements OnInit {
 
     this.subscriptions.add(
       this.gpuCtrl.get('num').valueChanges.subscribe((n: string) => {
-        if (n === 'none') {
+        if (n === '') {
           this.gpuCtrl.get('vendor').disable();
         } else {
           this.gpuCtrl.get('vendor').enable();
@@ -44,9 +44,6 @@ export class FormGpusComponent implements OnInit {
     this.backend.getGPUVendors().subscribe(vendors => {
       this.installedVendors = new Set(vendors);
     });
-
-    this.gpuCtrl.controls['num'].setValue('None');
-    this.gpuCtrl.controls['vendor'].setValue('NVIDIA');
   }
 
   // Vendor handling
