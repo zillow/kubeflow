@@ -12,7 +12,13 @@ export class FormAffinityTolerationsComponent implements OnInit {
   @Input() tolerationGroups: TolerationGroup[];
   @Input() affinityConfigs: AffinityConfig[];
 
+  private affinityCtrl: FormGroup;
+
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.affinityCtrl = this.parentForm.get('affinityTolerations') as FormGroup;
+
+    this.affinityCtrl.get('affinity').setValue('none');
+  }
 }

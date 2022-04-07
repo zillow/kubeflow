@@ -32,6 +32,7 @@ export class FormGpusComponent implements OnInit {
       .setValidators([this.vendorWithNum()]);
 
     this.gpuCtrl.get('num').setValue('none');
+    this.gpuCtrl.get('vendor').setValue('NVIDIA');
 
     this.subscriptions.add(
       this.gpuCtrl.get('num').valueChanges.subscribe((n: string) => {
