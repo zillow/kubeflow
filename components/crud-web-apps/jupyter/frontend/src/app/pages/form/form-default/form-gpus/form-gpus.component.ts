@@ -31,8 +31,6 @@ export class FormGpusComponent implements OnInit {
       .get('vendor')
       .setValidators([this.vendorWithNum()]);
 
-    this.gpuCtrl.get('num').setValue('none');
-
     this.subscriptions.add(
       this.gpuCtrl.get('num').valueChanges.subscribe((n: string) => {
         if (n === 'none') {
@@ -47,9 +45,8 @@ export class FormGpusComponent implements OnInit {
       this.installedVendors = new Set(vendors);
     });
 
-    // set default vendor to NVIDIA
-    const defaultVendor = 'NVIDIA';
-    this.gpuCtrl.get('vendor').setValue(defaultVendor);
+    this.gpuCtrl.controls['num'].setValue('None');
+    this.gpuCtrl.controls['vendor'].setValue('NVIDIA');
   }
 
   // Vendor handling
