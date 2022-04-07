@@ -19,6 +19,8 @@ export class FormAffinityTolerationsComponent implements OnInit {
   ngOnInit() {
     this.affinityCtrl = this.parentForm.get('affinityTolerations') as FormGroup;
 
-    this.affinityCtrl.get('affinity').setValue('none');
+    // set default affinity to NONE
+    const defaultAffinity = this.parentForm.get('affinityTolerations').get('affinity').find(a => a.displayName === 'None');
+    this.affinityCtrl.get('affinity').setValue(defaultAffinity);
   }
 }
