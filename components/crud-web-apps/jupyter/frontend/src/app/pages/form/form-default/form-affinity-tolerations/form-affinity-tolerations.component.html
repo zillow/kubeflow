@@ -3,7 +3,7 @@
     <!--Affinity-->
     <mat-form-field class="wide column" appearance="outline">
       <mat-label i18n> Affinity Config </mat-label>
-      <mat-select formControlName="affinity" [formControl]="parentForm.get('affinityConfig').set('None')">
+      <mat-select formControlName="affinity" [formControl]="parentForm.get('affinityConfig').setValue('None')">
 <!--        <mat-option value="" i18n="option None">None</mat-option>-->
         <mat-option
           *ngFor="let affinityConfig of affinityConfigs"
