@@ -47,6 +47,7 @@ def post_pvc(namespace):
 
     # ensure that all objects can be created
     api.create_notebook(notebook, namespace, dry_run=True)
+    '''
     for api_volume in api_volumes:
         pvc = volumes.get_new_pvc(api_volume)
         if pvc is None:
@@ -69,5 +70,6 @@ def post_pvc(namespace):
 
     log.info("Creating Notebook: %s", notebook)
     api.create_notebook(notebook, namespace)
+    '''
 
     return api.success_response("message", "Notebook created successfully.")
