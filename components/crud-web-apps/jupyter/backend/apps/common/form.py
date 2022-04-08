@@ -216,6 +216,9 @@ def set_notebook_tolerations(notebook, body, defaults):
     if tolerations_group_key == "none":
         return
 
+    if not tolerations_group_key:
+        tolerations_group_key = "CPU"
+
     notebook_tolerations = notebook["spec"]["template"]["spec"]["tolerations"]
     config = utils.load_spawner_ui_config()
     toleration_groups = config.get("tolerationGroup", {}).get("options", [])
@@ -239,6 +242,9 @@ def set_notebook_affinity(notebook, body, defaults):
 
     if affinity_config_key == "none":
         return
+
+    if not affinity_config_key:
+        affinity_config_key = "podAffinity"
 
     notebook_spec = notebook["spec"]["template"]["spec"]
     config = utils.load_spawner_ui_config()
