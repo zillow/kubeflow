@@ -12,11 +12,9 @@ export class FormAffinityTolerationsComponent implements OnInit {
   @Input() tolerationGroups: TolerationGroup[];
   @Input() affinityConfigs: AffinityConfig[];
 
-  private defaultAffinity = 'None'
+  defaultKey = 'podAffinity'
 
   constructor() {}
 
-  ngOnInit() {
-    this.parentForm.get('affinity').setValue(this.defaultAffinity);
-  }
+  ngOnInit() {}
 }
