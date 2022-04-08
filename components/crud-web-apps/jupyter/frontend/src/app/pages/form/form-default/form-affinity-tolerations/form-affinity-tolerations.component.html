@@ -8,7 +8,6 @@
         <mat-option
           *ngFor="let affinityConfig of affinityConfigs"
           [value]="affinityConfig.configKey"
-          [selected]="affinityConfig.configKey === defaultKey"
         >
           {{ affinityConfig.displayName }}
         </mat-option>
