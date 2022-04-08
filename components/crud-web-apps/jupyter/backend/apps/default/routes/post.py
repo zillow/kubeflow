@@ -67,9 +67,8 @@ def post_pvc(namespace):
 
         notebook = volumes.add_notebook_volume(notebook, v1_volume)
         notebook = volumes.add_notebook_container_mount(notebook, mount)
-
+    '''
     log.info("Creating Notebook: %s", notebook)
     api.create_notebook(notebook, namespace)
-    '''
 
     return api.success_response("message", "Notebook created successfully.")
