@@ -50,7 +50,7 @@ export class FormGpusComponent implements OnInit {
   public vendorTooltip(vendor: GPUVendor) {
     return !this.installedVendors.has(vendor.limitsKey)
       ? $localize`There are currently no ${vendor.uiName} GPUs in you cluster.`
-      : 'Please add GPU Vendor.';
+      : '';
   }
 
   // Custom Validation
@@ -69,7 +69,7 @@ export class FormGpusComponent implements OnInit {
       const num = this.parentForm.get('gpus').get('num').value;
       const vendor = this.parentForm.get('gpus').get('vendor').value;
 
-      if (num !== "" && vendor === '') {
+      if (num !== '' && vendor === '') {
         return { vendorNullName: true };
       } else {
         return null;
