@@ -62,7 +62,7 @@ export class FormGpusComponent implements OnInit {
     }
   }
 
-  public countToolTip() {
+  public countTooltip() {
     return $localize`You must specify a GPU Vendor if you require GPUs`;
   }
 
