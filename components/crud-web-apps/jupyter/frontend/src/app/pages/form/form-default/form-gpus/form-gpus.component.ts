@@ -62,6 +62,10 @@ export class FormGpusComponent implements OnInit {
     }
   }
 
+  public countToolTip() {
+    return $localize`You must specify a GPU Vendor if you require GPUs`;
+  }
+
   private vendorWithNum(): ValidatorFn {
     // Make sure that if the user has specified a number of GPUs
     // that they also specify the GPU vendor
