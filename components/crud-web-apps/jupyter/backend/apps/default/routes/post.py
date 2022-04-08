@@ -47,6 +47,9 @@ def post_pvc(namespace):
 
     # ensure that all objects can be created
     api.create_notebook(notebook, namespace, dry_run=True)
+    # Due to refactoring of this Web APP in v1.5.0 we no longer have a single variable to disable
+    # creation of notebook volumes. Instead we block out this code to prevent creation of volumes
+    # as AIP does not utilize notebook attached volumes.
     '''
     for api_volume in api_volumes:
         pvc = volumes.get_new_pvc(api_volume)

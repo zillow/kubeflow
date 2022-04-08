@@ -27,7 +27,6 @@ export function getFormDefaults(): FormGroup {
       vendor: ['', []],
       num: ['', []],
     }),
-    noWorkspace: [true, []],
     workspace: fb.group({
       mount: ['/home/jovyan', [Validators.required]],
       newPvc: fb.group({

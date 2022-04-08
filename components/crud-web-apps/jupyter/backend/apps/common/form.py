@@ -216,6 +216,7 @@ def set_notebook_tolerations(notebook, body, defaults):
     if tolerations_group_key == "none":
         return
 
+    # Added change by AIP, sets default toleration
     if not tolerations_group_key:
         tolerations_group_key = "CPU"
 
@@ -243,6 +244,7 @@ def set_notebook_affinity(notebook, body, defaults):
     if affinity_config_key == "none":
         return
 
+    # Added change by AIP, sets default affinity
     if not affinity_config_key:
         affinity_config_key = "podAffinity"
 
@@ -271,6 +273,7 @@ def set_notebook_gpus(notebook, body, defaults):
     if "num" not in gpus:
         raise BadRequest("'gpus' must have a 'num' field")
 
+    # Added change by AIP, modified value of None for GPU number for it to be default value.
     if gpus["num"] == "":
         return
 
