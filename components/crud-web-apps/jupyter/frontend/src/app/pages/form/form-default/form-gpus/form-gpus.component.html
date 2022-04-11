@@ -1,18 +1,15 @@
-<lib-form-section
-  title="GPUs"
-  text="Specify the number and Vendor of GPUs that will be assigned to the 
-        Notebook Server's Container."
-  icon="custom:gpuSectionIcon"
-  i18n-title
-  i18n-text
->
+<lib-form-section title="GPUs" i18n-title>
   <div class="row" [formGroup]="parentForm.get('gpus')">
     <!--GPUs Number-->
     <mat-form-field class="column" appearance="outline">
       <mat-label i18n>Number of GPUs</mat-label>
       <mat-select matNativeControl formControlName="num">
-        <mat-option value="none" i18n="option None">None</mat-option>
-        <mat-option *ngFor="let v of gpusCount" [value]="v">
+        <mat-option value="" i18n="option None" selected>None</mat-option>
+        <mat-option 
+          *ngFor="let v of gpusCount"
+          [value]="v"
+          [matTooltip]="countTooltip()"
+          >
           {{ v }}
         </mat-option>
       </mat-select>

@@ -10,14 +10,11 @@ variables:
   before_script: &build_templatized_docker_image_before_script
     # Turn on debug logging to output commands with vars to make local testing easier.
     - set -x
-    # TODO AIP-653 Remove gawk installation, hopefully push this down to Gitlab default image,
-    # see this thread: https://zillowgroup.slack.com/archives/CJ0F4LBE3/p1603908051284200
-    - apt-get update && apt-get install -yq --no-install-recommends gawk
     # Turn on timestamp logging per log line to get fine grained timing debug data.
     - |
       logging_pipe=/tmp/$$.logging
       mkfifo $logging_pipe
-      awk '{ gsub(/%/, "%%"); printf "\033[2m[" strftime("%H:%M:%S") "]\033[0m " $0 "\n" }' <$logging_pipe&
+      gawk '{ gsub(/%/, "%%"); printf "\033[2m[" strftime("%H:%M:%S") "]\033[0m " $0 "\n" }' <$logging_pipe&
       exec >$logging_pipe 2>&1
       rm $logging_pipe
     - ARTIFACT_NAME="jupyter-web-app"
