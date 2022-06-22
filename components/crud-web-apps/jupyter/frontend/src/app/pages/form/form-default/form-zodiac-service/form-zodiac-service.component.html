@@ -1,0 +1,31 @@
+<lib-form-section
+  title="Zodiac Service"
+  text="Specify the Zodiac service you would like associated to this notebook server and its spawned
+        workflow runs. If there is no Zodiac service available then you are not a member of a Zodiac
+        team that owns a Zodiac service. Please create a Zodiac service or join a Zodiac team at
+        https://zodiac.zillowgroup.net/"
+  i18n-title="Title for the zodiac service section of the form"
+  i18n-text="Text for the zodiac service form section"
+>
+  <div class="flex-column">
+
+  <mat-form-field
+    class="wide"
+    appearance="outline"
+    *ngIf="isContributorNamespace"
+  >
+    <!-- If readonly, then make it an input element instead of select -->
+    <mat-label i18n>Zodiac Service</mat-label>
+    <mat-select
+      placeholder="Zodiac Service"
+      i18n-placeholder
+      [formControl]="parentForm.get('zodiacService')"
+    >
+      <mat-option *ngFor="let service of services" [value]="service" [matTooltip]="serviceTooltip()">
+        {{ service }}
+      </mat-option>
+    </mat-select>
+    <mat-error i18n>You are not part of a team that owns a Zodiac service, please create a service or join a team in Zodiac.</mat-error>
+  </mat-form-field>
+  </div>
+</lib-form-section>

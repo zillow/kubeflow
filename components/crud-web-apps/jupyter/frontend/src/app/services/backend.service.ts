@@ -77,6 +77,29 @@ export class JWABackendService extends BackendService {
     );
   }
 
+  // check if this namespace was created by aip-onboarding-service
+  public getCreatedByAipOnboardingService(namespace: string): Observable<string> {
+    const url = `/api/namespaces/${namespace}/onboarding-service-namespace`;
+    console.log(`Sending request to retrieve namespace ${namespace} zodiac services.`)
+
+    return this.http.get<JWABackendResponse>(url).pipe(
+      catchError(error => this.handleError(error)),
+      map(data => data.createdByAipOnboardingService),
+    );
+  }
+
+  // get the current contributor zodiac services
+  public getZodiacServices(namespace: string): Observable<string[]> {
+    // Get owned zodiac services by namespace
+    const url = `api/namespaces/${namespace}/services`;
+    console.log(`Sending request to validate if namespace ${namespace} was created by aip-onboarding-service.`)
+
+    return this.http.get<JWABackendResponse>(url).pipe(
+      catchError(error => this.handleError(error)),
+      map(data => data.services),
+    );
+  }
+
   // POST
   public createNotebook(notebook: NotebookFormObject): Observable<string> {
     const url = `api/namespaces/${notebook.namespace}/notebooks`;

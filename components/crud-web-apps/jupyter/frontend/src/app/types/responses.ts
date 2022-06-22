@@ -10,4 +10,6 @@ export interface JWABackendResponse extends BackendResponse {
   config?: Config;
   poddefaults?: PodDefault[];
   vendors?: string[];
+  services?: string[];
+  createdByAipOnboardingService?: string;
 }

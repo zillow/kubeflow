@@ -23,6 +23,7 @@ export class FormDefaultComponent implements OnInit, OnDestroy {
   currNamespace = '';
   formCtrl: FormGroup;
   config: Config;
+  zodiacService = '';
 
   ephemeral = false;
   defaultStorageclass = false;
@@ -112,6 +113,13 @@ export class FormDefaultComponent implements OnInit, OnDestroy {
     delete notebook.imageGroupOne;
     delete notebook.imageGroupTwo;
 
+    // delete temp zodiac field as this is not needed for backend notebook creation
+    if (notebook.zodiacService) {
+      this.zodiacService = notebook.zodiacService;
+      console.log("here here here " + this.zodiacService);
+    }
+    delete notebook.zodiacService;
+
     // Ensure CPU input is a string
     if (typeof notebook.cpu === 'number') {
       notebook.cpu = notebook.cpu.toString();
@@ -170,6 +178,9 @@ export class FormDefaultComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     this.popup.open('Submitting new Notebook...', SnackType.Info, 3000);
+
+    // logic for adding zodiac information to poddefaults
+
 
     const notebook = this.getSubmitNotebook();
     this.backend.createNotebook(notebook).subscribe(() => {
