@@ -1,5 +1,5 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, Input } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { JWABackendService } from 'src/app/services/backend.service';
 import { NamespaceService } from 'kubeflow';
@@ -9,7 +9,7 @@ import { NamespaceService } from 'kubeflow';
   templateUrl: './form-zodiac-service.component.html',
   styleUrls: ['./form-zodiac-service.component.scss'],
 })
-export class FormZodiacServiceComponent implements OnInit, OnDestroy {
+export class FormZodiacServiceComponent implements OnInit {
   @Input() parentForm: FormGroup;
   @Input() services: string[];
 
