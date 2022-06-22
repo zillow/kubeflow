@@ -56,10 +56,4 @@ export class FormZodiacServiceComponent implements OnInit, OnDestroy {
       ? $localize`You are not part of a team that owns a Zodiac service, please create a service or join a team in Zodiac.`
       : '';
   }
-
-
-
-  ngOnDestroy() {
-    this.subscriptions.unsubscribe();
-  }
 }

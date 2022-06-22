@@ -12,7 +12,6 @@ def list_namespaces():
     return v1_core.list_namespace()
 
 
-@authz.needs_authorization("list", "core", "v1", "namespaces")
 def namespace_created_by_aip_onboarding_service(namespace: str) -> bool:
     """ Return true if the current namespace was created by aip-onboarding-service.
     """

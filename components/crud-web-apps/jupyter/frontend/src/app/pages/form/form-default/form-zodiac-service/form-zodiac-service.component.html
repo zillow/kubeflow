@@ -1,9 +1,7 @@
 <lib-form-section
   title="Zodiac Service"
   text="Specify the Zodiac service you would like associated to this notebook server and its spawned
-        workflow runs. If there is no Zodiac service available then you are not a member of a Zodiac
-        team that owns a Zodiac service. Please create a Zodiac service or join a Zodiac team at
-        https://zodiac.zillowgroup.net/"
+        workflow runs."
   i18n-title="Title for the zodiac service section of the form"
   i18n-text="Text for the zodiac service form section"
 >
@@ -25,7 +23,9 @@
         {{ service }}
       </mat-option>
     </mat-select>
-    <mat-error i18n>You are not part of a team that owns a Zodiac service, please create a service or join a team in Zodiac.</mat-error>
+    <mat-error i18n>You are not part of a team that owns a Zodiac service, please create a service or join a team in 
+      <p><a href="https://zodiac.zillowgroup.net/">Zodiac</a></p>
+    </mat-error>
   </mat-form-field>
   </div>
 </lib-form-section>
