@@ -1,5 +1,5 @@
 from .. import authz
-from . import v1_core, serialize
+from . import v1_core, utils
 from kubernetes.client.exceptions import ApiException
 from kubeflow.kubeflow.crud_backend import logging
 
@@ -23,7 +23,7 @@ def namespace_created_by_aip_onboarding_service(namespace: str) -> bool:
     except ApiException as e:
         print (f'Exception when calling CoreV1Api->list_namespace: {e}\n')
 
-    response_dict = serialize(response)
+    response_dict = utils.serialize(response)
     labels = response_dict["items"][0]["metadata"]["labels"]
 
     created_by_aip_onboarding_service = labels.get("app.kubernetes.io/created-by")
