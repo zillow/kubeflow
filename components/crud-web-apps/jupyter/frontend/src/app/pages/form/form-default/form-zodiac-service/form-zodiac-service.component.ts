@@ -14,7 +14,7 @@ export class FormZodiacServiceComponent implements OnInit {
   @Input() services: string[];
 
   public ownedServices = new Set<string>();
-  public isContributorNamespace: boolean;
+  public isOnboardingNamespace: boolean;
 
   subscriptions = new Subscription();
 
@@ -31,10 +31,10 @@ export class FormZodiacServiceComponent implements OnInit {
 
     // check if this namespace was created by aip-onboarding-service
     const curNamespace = this.namespaceService.getSelectedNamespace().subscribe(namespace => {
-      this.backend.getCreatedByAipOnboardingService(namespace).subscribe(isContributorNamespace => {
-        console.log(`this this this this ${isContributorNamespace}`);
-        this.isContributorNamespace = isContributorNamespace.toLowerCase() == 'true';
-        if (this.isContributorNamespace) {
+      this.backend.getCreatedByAipOnboardingService(namespace).subscribe(isOnboardingNamespace => {
+        console.log(`this this this this ${isOnboardingNamespace}`);
+        this.isOnboardingNamespace = isOnboardingNamespace.toLowerCase() == 'true';
+        if (this.isOnboardingNamespace) {
           // get the zodiac services the contributor is a part of
           this.backend.getZodiacServices(namespace).subscribe(services => {
             this.ownedServices = new Set(services);

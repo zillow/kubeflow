@@ -97,4 +97,4 @@ def get_namespace_created_by_aip_onboarding_service(namespace):
     is_aip_onboarding_service_namespace = api.namespace_created_by_aip_onboarding_service(namespace)
     log.info(f'temp log {is_aip_onboarding_service_namespace}')
 
-    return api.success_response("onboarding-service-namespace", str(is_aip_onboarding_service_namespace))
+    return api.success_response("isonboardingnamespace", str(is_aip_onboarding_service_namespace))

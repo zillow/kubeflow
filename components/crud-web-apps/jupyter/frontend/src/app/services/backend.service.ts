@@ -85,8 +85,8 @@ export class JWABackendService extends BackendService {
     return this.http.get<JWABackendResponse>(url).pipe(
       catchError(error => this.handleError(error)),
       map(data => {
-        console.log(`backend ${data.isContributorNamespace}`);
-        return data.isContributorNamespace;
+        console.log(`backend ${data.isonboardingnamespace}`);
+        return data.isonboardingnamespace;
       }),
     );
   }

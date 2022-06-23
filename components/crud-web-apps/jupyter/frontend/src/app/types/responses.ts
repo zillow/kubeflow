@@ -11,5 +11,5 @@ export interface JWABackendResponse extends BackendResponse {
   poddefaults?: PodDefault[];
   vendors?: string[];
   services?: string[];
-  isContributorNamespace?: string;
+  isonboardingnamespace?: string;
 }
