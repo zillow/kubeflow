@@ -90,10 +90,11 @@ def get_zodiac_services(namespace):
 
 
 @bp.route("/api/namespaces/<namespace>/onboarding-service-namespace")
-def get_namespaces(namespace):
+def get_namespace_created_by_aip_onboarding_service(namespace):
     """ Return whether a namespace was created by aip-onboarding-service.
     """
     log.info(f'Entering validation if namespace {namespace} was created by aip-onboarding-service.')
     is_aip_onboarding_service_namespace = api.namespace_created_by_aip_onboarding_service(namespace)
+    log.info(f'temp log {is_aip_onboarding_service_namespace}')
 
     return api.success_response("onboarding-service-namespace", str(is_aip_onboarding_service_namespace))
