@@ -3,7 +3,6 @@ import { FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { JWABackendService } from 'src/app/services/backend.service';
 import { NamespaceService } from 'kubeflow';
-import { environment } from '@app/environment';
 
 @Component({
   selector: 'app-form-zodiac-service',
@@ -13,7 +12,6 @@ import { environment } from '@app/environment';
 export class FormZodiacServiceComponent implements OnInit {
   @Input() parentForm: FormGroup;
   @Input() services: string[];
-  env = environment;
 
   public ownedServices = new Set<string>();
   public isContributorNamespace: boolean;
@@ -47,7 +45,6 @@ export class FormZodiacServiceComponent implements OnInit {
         }
 
       });
-
     });
 
     this.subscriptions.add(curNamespace);
