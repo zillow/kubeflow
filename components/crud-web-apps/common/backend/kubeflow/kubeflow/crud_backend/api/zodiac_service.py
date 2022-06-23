@@ -85,14 +85,13 @@ def get_zodiac_services(namespace: str) -> Set[str]:
     """ For individual user namespaces, the user alias is the same as the namespace name.
         Return the set of zodiac services the user belongs to.
     """
-    temp_profile = namespace.replace('aip-example-', '') #remove this before final merge
-    is_aip_engineer = validate_ai_platform_engineer(temp_profile)
+    is_aip_engineer = validate_ai_platform_engineer(namespace)
 
-    services = get_contributor_services(temp_profile)
+    services = get_contributor_services(namespace)
 
     # remove ai-platform-* or aip-* services for non-aip engineers.
     if not is_aip_engineer:
-        log.info(f'Contributor {temp_profile} is not an AIP engineer.')
+        log.info(f'Contributor {namespace} is not an AIP engineer.')
         for service in services:
             if "ai-platform" in service or "aip-" in service:
                 services.remove(service)
