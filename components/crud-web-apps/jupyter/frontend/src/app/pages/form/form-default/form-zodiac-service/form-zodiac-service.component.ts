@@ -13,7 +13,6 @@ export class FormZodiacServiceComponent implements OnInit {
   @Input() parentForm: FormGroup;
   @Input() services: string[];
 
-  currNamespace = '';
   public ownedServices = new Set<string>();
   public isContributorNamespace: boolean;
 
@@ -29,25 +28,27 @@ export class FormZodiacServiceComponent implements OnInit {
     this.parentForm
       .get('zodiacService');
 
-    // Keep track of the selected namespace
-    this.subscriptions.add(
-      this.namespaceService.getSelectedNamespace().subscribe(namespace => {
-        this.currNamespace = namespace;
-      }),
-    );
 
     // check if this namespace was created by aip-onboarding-service
-    this.backend.getCreatedByAipOnboardingService(this.currNamespace).subscribe(isContributorNamespace => {
-      this.isContributorNamespace = isContributorNamespace.toLowerCase() == 'true';
+    const curNamespace = this.namespaceService.getSelectedNamespace().subscribe(namespace => {
+      this.backend.getCreatedByAipOnboardingService(namespace).subscribe(isContributorNamespace => {
+        this.isContributorNamespace = isContributorNamespace.toLowerCase() == 'true';
+        if (this.isContributorNamespace) {
+          // get the zodiac services the contributor is a part of
+          this.backend.getZodiacServices(namespace).subscribe(services => {
+            this.ownedServices = new Set(services);
+          });
+        }
+        else {
+          // TODO: remove else after finalizing PR
+          console.log("this is not a contributor namespace " + namespace + " " + this.services.toString());
+        }
+
+      });
+
     });
 
-    if (!this.isContributorNamespace) {
-      console.log("this is not a contributor namespace " + this.currNamespace + " " + this.services.toString());
-      // get the zodiac services the contributor is a part of
-      this.backend.getZodiacServices(this.currNamespace).subscribe(services => {
-        this.ownedServices = new Set(services);
-      });
-    }
+    this.subscriptions.add(curNamespace);
   }
 
   // Zodiac Service Handling
