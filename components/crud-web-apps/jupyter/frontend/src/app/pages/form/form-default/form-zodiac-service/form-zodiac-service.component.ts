@@ -32,6 +32,7 @@ export class FormZodiacServiceComponent implements OnInit {
     // check if this namespace was created by aip-onboarding-service
     const curNamespace = this.namespaceService.getSelectedNamespace().subscribe(namespace => {
       this.backend.getCreatedByAipOnboardingService(namespace).subscribe(isContributorNamespace => {
+        console.log(`this this this this ${isContributorNamespace}`);
         this.isContributorNamespace = isContributorNamespace.toLowerCase() == 'true';
         if (this.isContributorNamespace) {
           // get the zodiac services the contributor is a part of
