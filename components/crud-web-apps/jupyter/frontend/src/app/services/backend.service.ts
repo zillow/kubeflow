@@ -80,12 +80,10 @@ export class JWABackendService extends BackendService {
   // check if this namespace was created by aip-onboarding-service
   public getCreatedByAipOnboardingService(namespace: string): Observable<string> {
     const url = `api/namespaces/${namespace}/onboarding-service-namespace`;
-    console.log(`Sending request to retrieve namespace ${namespace} zodiac services.`)
 
     return this.http.get<JWABackendResponse>(url).pipe(
       catchError(error => this.handleError(error)),
       map(data => {
-        console.log(`backend ${data.isonboardingnamespace}`);
         return data.isonboardingnamespace;
       }),
     );
