@@ -1,9 +1,8 @@
-import json
+import requests
 
 from kubeflow.kubeflow.crud_backend import logging
 from typing import Any, Dict, Set
-from urllib.error import HTTPError
-from urllib.request import Request, urlopen
+from requests import HTTPError
 
 
 log = logging.getLogger(__name__)
@@ -11,18 +10,14 @@ ZODIAC_GRAPHQL_URL = "https://zodiac-graphql.zillowgroup.net/"
 
 
 def jsonify_graphql_query_response(graphql_query: str) -> Dict[str, Any]:
-    request_data = json.dumps({"query": graphql_query}).encode("utf-8")
-    request = Request(ZODIAC_GRAPHQL_URL, data=request_data)
-    request.add_header("Content-Type", "application/json")
+    header = {"Content-Type": "application/json"}
 
     try:
-        response = urlopen(request)
+        response = requests.post(ZODIAC_GRAPHQL_URL, json={"query": graphql_query}, headers=header)
     except HTTPError as e:
         raise Exception(f"Error {e.code} occurred, reason: {e.read().decode('utf-8')}")
 
-    response_json = json.loads(response.read().decode("utf-8"))
-
-    return response_json
+    return response.json()
 
 
 def get_contributor_services(ai_platform_contributor: str) -> Set[str]:
@@ -30,7 +25,7 @@ def get_contributor_services(ai_platform_contributor: str) -> Set[str]:
     # with weird escaping.
     graphql_query = """{
         user ( login : "%(ai_platform_contributor)s" ) {
-  	        services (limit : 100) {
+            services (limit : 100) {
                 items {
                     name
                 }
