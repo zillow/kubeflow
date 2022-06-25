@@ -140,6 +140,17 @@ export class JWABackendService extends BackendService {
     );
   }
 
+  public addZodiacServicePoddefault(service: string, namespace: string): Observable<string> {
+    const url = `api/namespaces/${namespace}/poddefault/zodiacservice/${service}`;
+
+    return this.http.post<JWABackendResponse>(url).pipe(
+      catchError(error => this.handleError(error)),
+      map(_ => {
+        return 'poddefault patched';
+      }),
+    );
+  }
+
   // DELETE
   public deleteNotebook(namespace: string, name: string) {
     const url = `api/namespaces/${namespace}/notebooks/${name}`;

@@ -56,4 +56,11 @@ export class FormZodiacServiceComponent implements OnInit {
       ? $localize`You are not part of a team that owns a Zodiac service, please create a service or join a team in Zodiac.`
       : '';
   }
+
+  serviceDisplayName(service: string): string {
+    const [name, team = null] = service.split(':');
+    console.log(`Splitting up service from team for cleaner display ${service} and ${team}`)
+
+    return name;
+  }
 }

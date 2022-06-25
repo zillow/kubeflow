@@ -40,6 +40,38 @@ def patch_notebook(namespace, notebook):
     return api.success_response()
 
 
+@bp.route(
+    "api/namespaces/<namespace>/poddefault/zodiacservice/<service>", methods=["PATCH"]
+)
+@decorators.request_is_json_type
+def patch_zodiac_service_poddefault(namespace, service_team):
+    log.info(f'Initiating request to patch poddefault with zodiac service {service} in namespace {namespace}.')
+    # build the request patch to update poddefault
+    service = service_team.split(":")[0]
+    team = service_team.split(":")[0]
+
+    # get the pod-default and update environment variable from dictionary due to patching limitation
+    # when patching environment variables with the python kubernetes client
+    all_poddefault = api.get_all_poddefault(namespace)
+
+    envs = all_poddefault["spec"]["env"]
+    for env in envs:
+        if (env["name"] == "METAFLOW_DATASTORE_SYSROOT_S3"):
+            env["value"] = f"s3://serve-datalake-zillowgroup/zillow/workflow_sdk/metaflow_28d/dev/{service}"
+
+
+    # patch the missing zodiac service information in the poddefaults
+    patch_body = {
+        "spec": {"labels": {"zodiac.zillowgroup.net/service": service, "zodiac.zillowgroup.net/team": team},
+        "annotations": {"logging.zgtools.net/topic": f"log.fluentd-z1.{service}.dev"},
+        "env": envs}
+    }
+
+    api.patch_zodiac_service(namespace, patch_body)
+
+    return api.success_response()
+
+
 # helper functions
 def start_stop_notebook(namespace, notebook, request_body):
     stop = request_body[STOP_ATTR]

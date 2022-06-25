@@ -6,7 +6,7 @@ from requests import HTTPError
 
 
 log = logging.getLogger(__name__)
-ZODIAC_GRAPHQL_URL = "https://zodiac-graphql.zillowgroup.net/"
+ZODIAC_GRAPHQL_URL = "https://zodiac-graphql.zgtools.net/"
 
 
 def jsonify_graphql_query_response(graphql_query: str) -> Dict[str, Any]:
@@ -28,6 +28,7 @@ def get_contributor_services(ai_platform_contributor: str) -> Set[str]:
             services (limit : 100) {
                 items {
                     name
+                    teamName
                 }
             }
         }
@@ -40,11 +41,13 @@ def get_contributor_services(ai_platform_contributor: str) -> Set[str]:
     service_list = response_data["data"]["user"]["services"]["items"]
     services = set()
 
-    for name in service_list:
-        service = name["name"]
-        services.add(service)
+    for names in service_list:
+        service = names["name"]
+        team = names["teamName"]
+        service_team = service + ":" + team
+        services.add(service_team)
     
-    log.info(f'Found zodiac services {services} for contributor {ai_platform_contributor}.')
+    log.info(f'Found zodiac services for contributor {ai_platform_contributor}.')
 
     return services
 
@@ -83,17 +86,13 @@ def get_zodiac_services(namespace: str) -> Set[str]:
     is_aip_engineer = validate_ai_platform_engineer(namespace)
 
     services = get_contributor_services(namespace)
+    _set = services.copy()
 
     # remove ai-platform-* or aip-* services for non-aip engineers.
     if not is_aip_engineer:
         log.info(f'Contributor {namespace} is not an AIP engineer.')
         for service in services:
             if "ai-platform" in service or "aip-" in service:
-                services.remove(service)
+                _set.remove(service)
 
-    # blanket remove platform services
-    for service in services:
-        if "kf-" in service or "metaflow-" in service:
-            services.remove(service)
-
-    return services
+    return _set
