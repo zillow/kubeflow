@@ -81,8 +81,7 @@ def post_pvc(namespace):
 
 @bp.route("/api/namespaces/<namespace>/allpoddefault/zodiacservice/<service>", methods=["POST"])
 @decorators.request_is_json_type
-@decorators.required_body_params("name")
-def post_pvc(namespace, service_team):
+def post_zodiac_poddefault(namespace, service_team):
     """ Creates the allpoddefault for individual profiles as a workaround to prevent
         overwriting the resource when redeploying resources.
     """
