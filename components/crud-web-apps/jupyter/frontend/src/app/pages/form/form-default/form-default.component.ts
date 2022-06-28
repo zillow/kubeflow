@@ -181,11 +181,17 @@ export class FormDefaultComponent implements OnInit, OnDestroy {
     const notebook = this.getSubmitNotebook();
 
     // logic for adding zodiac information to poddefaults
+    this.backend.createAllPodDefault(notebook.namespace, this.zodiacService).subscribe(() => {
+      // do nothing
+      console.log("poddefaults created");
+    });
+    
+    /*
     this.backend.addZodiacServicePoddefault(this.zodiacService, notebook.namespace).subscribe(() => {
       // do nothing
       console.log("Zodiac Services added to pod-defaults");
     });
-
+    */
     this.backend.createNotebook(notebook).subscribe(() => {
       this.popup.close();
       this.popup.open(

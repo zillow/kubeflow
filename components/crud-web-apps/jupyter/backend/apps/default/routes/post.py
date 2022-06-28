@@ -1,4 +1,6 @@
 from flask import request
+import yaml
+import json
 
 from kubeflow.kubeflow.crud_backend import api, decorators, helpers, logging
 
@@ -75,3 +77,39 @@ def post_pvc(namespace):
     api.create_notebook(notebook, namespace)
 
     return api.success_response("message", "Notebook created successfully.")
+
+
+@bp.route("/api/namespaces/<namespace>/allpoddefault/zodiacservice/<service>", methods=["POST"])
+@decorators.request_is_json_type
+@decorators.required_body_params("name")
+def post_pvc(namespace, service_team):
+    """ Creates the allpoddefault for individual profiles as a workaround to prevent
+        overwriting the resource when redeploying resources.
+    """
+    service = service_team.split(":")[0]
+    team = service_team.split(":")[0]
+    templates_dir = "../templates"
+    with open(f"{templates_dir}/all-pod-default.yaml", "r") as f:
+        all_poddefault_yaml = yaml.load(f, Loader=yaml.FullLoader)
+
+    all_poddefault_yaml["spec"]["annotations"][
+        "logging.zgtools.net/topic"] = f'log.fluentd-z1.{service}.dev'
+    all_poddefault_yaml["spec"]["labels"][
+        "zodiac.zillowgroup.net/team"] = team
+    all_poddefault_yaml["spec"]["labels"][
+        "zodiac.zillowgroup.net/service"] = service
+    
+    envs = all_poddefault_yaml["spec"]["env"]
+    for env in envs:
+        if (env["name"] == "METAFLOW_DATASTORE_SYSROOT_S3"):
+            env["value"] = f"s3://serve-datalake-zillowgroup/zillow/workflow_sdk/metaflow_28d/dev/{service}"
+        if (env["name"] == "METAFLOW_NOTIFY_ON_ERROR"):
+            env["value"] = f"{namespace}@zillowgroup.com"
+
+    all_poddefault_yaml["spec"]["env"] = envs
+
+    log.info(f'Creating all-pod-default {json.dumps(all_poddefault_yaml)} for user {namespace}.')
+
+    api.post_all_poddefault(namespace, json.dumps(all_poddefault_yaml))
+
+    return api.success_response()

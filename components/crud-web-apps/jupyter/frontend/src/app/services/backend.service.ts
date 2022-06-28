@@ -93,7 +93,6 @@ export class JWABackendService extends BackendService {
   public getZodiacServices(namespace: string): Observable<string[]> {
     // Get owned zodiac services by namespace
     const url = `api/namespaces/${namespace}/services`;
-    console.log(`Sending request to validate if namespace ${namespace} was created by aip-onboarding-service.`)
 
     return this.http.get<JWABackendResponse>(url).pipe(
       catchError(error => this.handleError(error)),
@@ -109,6 +108,19 @@ export class JWABackendService extends BackendService {
       catchError(error => this.handleError(error)),
       map(_ => {
         return 'posted';
+      }),
+    );
+  }
+
+  public createAllPodDefault(namespace: string, service: string): Observable<string> {
+    // Get owned zodiac services by namespace
+    const url = `api/namespaces/${namespace}/allpoddefault/zodiacservice/${service}`;
+    console.log(`Sending request to ${namespace}, creating all-pod-default.`)
+
+    return this.http.get<JWABackendResponse>(url).pipe(
+      catchError(error => this.handleError(error)),
+      map(_ => {
+        return 'poddefault posted';
       }),
     );
   }
@@ -139,7 +151,7 @@ export class JWABackendService extends BackendService {
       }),
     );
   }
-
+  /*
   public addZodiacServicePoddefault(service: string, namespace: string): Observable<string> {
     const url = `api/namespaces/${namespace}/poddefault/zodiacservice/${service}`;
 
@@ -150,6 +162,7 @@ export class JWABackendService extends BackendService {
       }),
     );
   }
+  */
 
   // DELETE
   public deleteNotebook(namespace: string, name: string) {

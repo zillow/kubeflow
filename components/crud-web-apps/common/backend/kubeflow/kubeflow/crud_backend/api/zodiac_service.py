@@ -1,4 +1,5 @@
 import requests
+import os
 
 from kubeflow.kubeflow.crud_backend import logging
 from typing import Any, Dict, Set
@@ -6,11 +7,12 @@ from requests import HTTPError
 
 
 log = logging.getLogger(__name__)
-ZODIAC_GRAPHQL_URL = "https://zodiac-graphql.zgtools.net/"
+ZODIAC_GRAPHQL_URL = "https://zodiac-graphql.prod.kong.zg-int.net"
+GRAPHQL_KONG_APIKEY = os.environ.get("ZODIAC_GRAPHQL_KONG_APIKEY", None)
 
 
 def jsonify_graphql_query_response(graphql_query: str) -> Dict[str, Any]:
-    header = {"Content-Type": "application/json"}
+    header = {"Content-Type": "application/json", "apikey": GRAPHQL_KONG_APIKEY}
 
     try:
         response = requests.post(ZODIAC_GRAPHQL_URL, json={"query": graphql_query}, headers=header)
