@@ -13,10 +13,11 @@ GRAPHQL_KONG_APIKEY = os.environ.get("ZODIAC_GRAPHQL_KONG_APIKEY", None)
 
 def jsonify_graphql_query_response(graphql_query: str) -> Dict[str, Any]:
     header = {"Content-Type": "application/json", "apikey": GRAPHQL_KONG_APIKEY}
-
+    log.info(f'Calling zodiac graphql with url {ZODIAC_GRAPHQL_URL}')
     try:
         response = requests.post(ZODIAC_GRAPHQL_URL, json={"query": graphql_query}, headers=header)
     except HTTPError as e:
+        log.error(f"Error when calling zodiac graphql {e.read().decode('utf-8')}")
         raise Exception(f"Error {e.code} occurred, reason: {e.read().decode('utf-8')}")
 
     return response.json()
@@ -85,6 +86,7 @@ def get_zodiac_services(namespace: str) -> Set[str]:
     """ For individual user namespaces, the user alias is the same as the namespace name.
         Return the set of zodiac services the user belongs to.
     """
+    log.info(f'Validating if user {namespace} is an aip engineer')
     is_aip_engineer = validate_ai_platform_engineer(namespace)
 
     services = get_contributor_services(namespace)
