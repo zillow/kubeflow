@@ -12,10 +12,18 @@ GRAPHQL_KONG_APIKEY = os.environ.get("ZODIAC_GRAPHQL_KONG_APIKEY", None)
 
 
 def jsonify_graphql_query_response(graphql_query: str) -> Dict[str, Any]:
-    header = {"Content-Type": "application/json", "apikey": GRAPHQL_KONG_APIKEY}
+    headers = {
+        "Accept-Encoding": "gzip, deflate, br",
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Connection": "keep-alive",
+        "DNT": "1",
+        "Origin": ZODIAC_GRAPHQL_URL,
+        "apikey": GRAPHQL_KONG_APIKEY
+    }
     log.info(f'Calling zodiac graphql with url {ZODIAC_GRAPHQL_URL}')
     try:
-        response = requests.post(ZODIAC_GRAPHQL_URL, json={"query": graphql_query}, headers=header)
+        response = requests.post(ZODIAC_GRAPHQL_URL, json={"query": graphql_query}, headers=headers)
     except HTTPError as e:
         log.error(f"Error when calling zodiac graphql {e.read().decode('utf-8')}")
         raise Exception(f"Error {e.code} occurred, reason: {e.read().decode('utf-8')}")
