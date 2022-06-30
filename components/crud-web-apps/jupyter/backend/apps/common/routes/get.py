@@ -84,7 +84,7 @@ def get_zodiac_services(namespace):
     """
     # Get all of the zodiac services
     log.info(f'Gathering zodiac services for namespace {namespace}.')
-    owned_services = api.get_zodiac_services(namespace)
+    owned_services = api.get_contributor_zodiac_configmap(namespace)
 
     return api.success_response("services", list(owned_services))
 

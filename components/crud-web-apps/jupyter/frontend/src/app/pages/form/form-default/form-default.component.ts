@@ -116,6 +116,12 @@ export class FormDefaultComponent implements OnInit, OnDestroy {
     // delete temp zodiac field as this is not needed for backend notebook creation
     if (notebook.zodiacService) {
       this.zodiacService = notebook.zodiacService;
+      // split zodiac service and team from backend as they are returned as a string in the
+      // form 'service:team' and set as notebook environment variable.
+      notebook.environment = {
+        "ZODIAC_SERVICE": this.zodiacService.split(":")[0],
+        "ZODIAC_TEAM": this.zodiacService.split(":")[1]
+      }
       console.log("here here here " + this.zodiacService);
     }
     delete notebook.zodiacService;

@@ -2,7 +2,7 @@ import requests
 import os
 import json
 
-from kubeflow.kubeflow.crud_backend import logging
+from kubeflow.kubeflow.crud_backend import api, logging
 from typing import Any, Dict, Set
 from requests import HTTPError
 
@@ -31,7 +31,7 @@ def jsonify_graphql_query_response(graphql_query: str) -> Dict[str, Any]:
     return response.json()
 
 
-def get_contributor_services(ai_platform_contributor: str) -> Set[str]:
+def get_contributor_zodiac_metadata(ai_platform_contributor: str) -> Set[str]:
     # Use the old style of string formatting to not over-complicate the GraphQL syntax
     # with weird escaping.
     graphql_query = """{
@@ -50,44 +50,35 @@ def get_contributor_services(ai_platform_contributor: str) -> Set[str]:
     response_data = jsonify_graphql_query_response(graphql_query)
 
     service_list = response_data["data"]["user"]["services"]["items"]
-    services = set()
+    metadata = set()
 
-    for names in service_list:
-        service = names["name"]
-        team = names["teamName"]
-        service_team = service + ":" + team
-        services.add(service_team)
+    for service_team in service_list:
+        zodiac_tuple= service_team["name"] + ":" + service_team["teamName"]
+        metadata.add(zodiac_tuple)
     
     log.info(f'Found zodiac services for contributor {ai_platform_contributor}.')
 
-    return services
+    return metadata
 
-
-def validate_ai_platform_engineer(ai_platform_contributor: str) -> bool:
+        #for item in json.loads(zodiac_metadata)['items']:
+        #    print (item)
+def _get_ai_platform_engineers() -> Set[str]:
+    # TODO: AIP-6338 Remove when the cluster is able to reach zodiac Graphql
     # Use the old style of string formatting to not over-complicate the GraphQL syntax
     # with weird escaping.
     graphql_query = """{
-        user ( login : "%(ai_platform_contributor)s" ) {
-  	        teams {
+        team (name : "ai-platform") {
+            members {
                 items {
-                    name    
+                    login
                 }
-            }
+             }
         }
-    }""" % {
-        "ai_platform_contributor": ai_platform_contributor
-    }
+    }"""
 
     response_data = jsonify_graphql_query_response(graphql_query)
 
-    team_list = response_data["data"]["user"]["teams"]["items"]
-    teams = set()
-
-    for name in team_list:
-        team = name["name"]
-        teams.add(team)
-
-    return "ai-platform" in teams
+    return {contributor['login'] for contributor in response_data["data"]["team"]["members"]["items"]}
 
 
 def get_zodiac_services(namespace: str) -> Set[str]:
@@ -95,16 +86,37 @@ def get_zodiac_services(namespace: str) -> Set[str]:
         Return the set of zodiac services the user belongs to.
     """
     log.info(f'Validating if user {namespace} is an aip engineer')
-    is_aip_engineer = validate_ai_platform_engineer(namespace)
+    is_aip_engineer = namespace in _get_ai_platform_engineers()
 
-    services = get_contributor_services(namespace)
-    _set = services.copy()
+    zodiac_metadata = get_contributor_zodiac_metadata(namespace)
+    _zodiac_metadata = zodiac_metadata.copy()
 
-    # remove ai-platform-* or aip-* services for non-aip engineers.
+    # remove ai-platform-* team metadata for non-aip engineers.
     if not is_aip_engineer:
-        log.info(f'Contributor {namespace} is not an AIP engineer.')
-        for service in services:
-            if "ai-platform" in service or "aip-" in service:
-                _set.remove(service)
+        for service_team in zodiac_metadata:
+            if "ai-platform" in service_team:
+                _zodiac_metadata.remove(service_team)
 
-    return _set
+    return _zodiac_metadata
+
+
+# TODO: AIP-6338. Remove this method and subsequent configmap api calls
+# and revert back to other zodiac logic in this file once we are able to
+# access zodiac graphql from the aianalytics clusters.
+def get_contributor_zodiac_configmap(namespace: str) -> Set[str]:
+    """ Returns the contributor zodiac service and team data as a string
+        in the format 'service:team'.
+    """
+    log.info(f'Gathering zodiac metadata for {namespace} from contributor configmap.')
+    service_list = api.list_contributor_zodiac_configmap(namespace)
+    log.info(f'Retrieved configmap from namespace {namespace}')
+    metadata = set()
+    # account for possible upstream error retrieving the configmap
+    if (service_list.get("key") == "error"):
+        return metadata
+
+    for service_team in service_list["items"]:
+        zodiac_tuple= service_team["name"] + ":" + service_team["teamName"]
+        metadata.add(zodiac_tuple)
+
+    return metadata
