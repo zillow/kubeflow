@@ -108,7 +108,7 @@ def get_contributor_zodiac_configmap(namespace: str) -> Set[str]:
         in the format 'service:team'.
     """
     log.info(f'Gathering zodiac metadata for {namespace} from contributor configmap.')
-    service_list = api.list_contributor_zodiac_configmap(namespace)["items"][0]["data"]["zodiac-data.json"]
+    service_list = json.loads(api.list_contributor_zodiac_configmap(namespace)["items"][0]["data"]["zodiac-data.json"])
     log.info(service_list)
     log.info(f'Retrieved configmap from namespace {namespace}')
     metadata = set()
