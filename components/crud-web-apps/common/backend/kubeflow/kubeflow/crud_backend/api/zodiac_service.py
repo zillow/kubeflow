@@ -53,7 +53,7 @@ def get_contributor_zodiac_metadata(ai_platform_contributor: str) -> Set[str]:
     metadata = set()
 
     for service_team in service_list:
-        zodiac_tuple= service_team["name"] + ":" + service_team["teamName"]
+        zodiac_tuple = service_team["name"] + ":" + service_team["teamName"]
         metadata.add(zodiac_tuple)
     
     log.info(f'Found zodiac services for contributor {ai_platform_contributor}.')
@@ -108,7 +108,8 @@ def get_contributor_zodiac_configmap(namespace: str) -> Set[str]:
         in the format 'service:team'.
     """
     log.info(f'Gathering zodiac metadata for {namespace} from contributor configmap.')
-    service_list = api.list_contributor_zodiac_configmap(namespace)
+    service_list = api.list_contributor_zodiac_configmap(namespace)["data"]["zodiac-data.json"]
+    log.info(service_list)
     log.info(f'Retrieved configmap from namespace {namespace}')
     metadata = set()
     # account for possible upstream error retrieving the configmap
@@ -116,7 +117,7 @@ def get_contributor_zodiac_configmap(namespace: str) -> Set[str]:
         return metadata
 
     for service_team in service_list["items"]:
-        zodiac_tuple= service_team["name"] + ":" + service_team["teamName"]
+        zodiac_tuple = service_team["name"] + ":" + service_team["teamName"]
         metadata.add(zodiac_tuple)
 
     return metadata
