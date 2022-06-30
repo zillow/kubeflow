@@ -19,13 +19,12 @@
       i18n-placeholder
       [formControl]="parentForm.get('zodiacService')"
     >
-      <mat-option *ngFor="let service of services" [value]="service" [matTooltip]="serviceTooltip()">
+      <mat-option *ngFor="let service of ownedServices" [value]="service" [matTooltip]="service">
         {{ serviceDisplayName(service) }}
       </mat-option>
     </mat-select>
-    <mat-error i18n>You are not part of a team that owns a Zodiac service, please create a service or join a team in 
-      <p><a href="https://zodiac.zillowgroup.net/">Zodiac</a></p>
-    </mat-error>
   </mat-form-field>
+  <p *ngIf="notHasZodiacServices" style="color:red;">You are not part of a team that owns a Zodiac service, please create a service or join a team in 
+    <a href="https://zodiac.zillowgroup.net/">Zodiac</a></p>
   </div>
 </lib-form-section>

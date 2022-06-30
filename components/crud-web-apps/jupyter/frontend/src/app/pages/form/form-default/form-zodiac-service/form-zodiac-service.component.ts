@@ -15,6 +15,7 @@ export class FormZodiacServiceComponent implements OnInit {
 
   public ownedServices = new Set<string>();
   public isOnboardingNamespace: boolean;
+  public notHasZodiacServices: boolean;
 
   subscriptions = new Subscription();
 
@@ -38,23 +39,14 @@ export class FormZodiacServiceComponent implements OnInit {
           this.backend.getZodiacServices(namespace).subscribe(services => {
             this.ownedServices = new Set(services);
           });
-        }
-        else {
-          // TODO: remove else after finalizing PR
-          console.log("this is not a contributor namespace " + namespace + " " + this.services.toString());
+
+          this.notHasZodiacServices = this.ownedServices.size == 0;
         }
 
       });
     });
 
     this.subscriptions.add(curNamespace);
-  }
-
-  // Zodiac Service Handling
-  public serviceTooltip() {
-    return this.ownedServices.size == 0
-      ? $localize`You are not part of a team that owns a Zodiac service, please create a service or join a team in Zodiac.`
-      : '';
   }
 
   serviceDisplayName(service: string): string {
