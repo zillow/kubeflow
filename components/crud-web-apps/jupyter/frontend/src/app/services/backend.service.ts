@@ -96,7 +96,10 @@ export class JWABackendService extends BackendService {
 
     return this.http.get<JWABackendResponse>(url).pipe(
       catchError(error => this.handleError(error)),
-      map(data => data.services),
+      map(data =>  {
+        console.log(data.services);
+        return data.services;
+    }),
     );
   }
 
