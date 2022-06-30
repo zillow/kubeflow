@@ -112,6 +112,6 @@ def post_zodiac_poddefault(namespace):
 
     log.info(f'Creating all-pod-default {json.dumps(all_poddefault_yaml)} for user {namespace}.')
 
-    api.post_all_poddefault(namespace, json.dumps(all_poddefault_yaml))
+    api.post_all_poddefault(namespace, all_poddefault_yaml)
 
     return api.success_response()
