@@ -38,9 +38,10 @@ export class FormZodiacServiceComponent implements OnInit {
           // get the zodiac services the contributor is a part of
           this.backend.getZodiacServices(namespace).subscribe(services => {
             this.ownedServices = new Set(services);
+            console.log(this.ownedServices.size)
+            this.notHasZodiacServices = this.ownedServices.size == 0;
           });
 
-          this.notHasZodiacServices = this.ownedServices.size == 0;
         }
 
       });
@@ -51,7 +52,6 @@ export class FormZodiacServiceComponent implements OnInit {
 
   serviceDisplayName(service: string): string {
     const [name, team = null] = service.split(':');
-    console.log(`Splitting up service from team for cleaner display ${service} and ${team}`)
 
     return name;
   }
