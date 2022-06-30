@@ -114,13 +114,16 @@ export class JWABackendService extends BackendService {
     );
   }
 
-  public createAllPodDefault(namespace: string, service: string): Observable<string> {
+  public createAllPodDefault(namespace: string, service_team: string): Observable<string> {
+    const payload = {
+      'service': service_team.split(":")[0], 
+      'team': service_team.split(":")[1]
+    };
     // Get owned zodiac services by namespace
-    service = service.replace(":","~")
-    const url = `api/namespaces/${namespace}/allpoddefault/zodiacservice/${service}`;
-    console.log(`Sending request to ${namespace}, creating all-pod-default. ${service}`)
+    const url = `api/namespaces/${namespace}/allpoddefault`;
+    console.log(`Sending request to ${namespace}, creating all-pod-default. ${payload}`)
 
-    return this.http.post<JWABackendResponse>(url).pipe(
+    return this.http.post<JWABackendResponse>(url, payload).pipe(
       catchError(error => this.handleError(error)),
       map(_ => {
         return 'poddefault posted';

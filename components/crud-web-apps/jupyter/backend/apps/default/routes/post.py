@@ -79,14 +79,17 @@ def post_pvc(namespace):
     return api.success_response("message", "Notebook created successfully.")
 
 
-@bp.route("/api/namespaces/<namespace>/allpoddefault/zodiacservice/<service>", methods=["POST"])
+@bp.route("/api/namespaces/<namespace>/allpoddefault", methods=["POST"])
 @decorators.request_is_json_type
-def post_zodiac_poddefault(namespace, service_team):
+def post_zodiac_poddefault(namespace):
     """ Creates the allpoddefault for individual profiles as a workaround to prevent
         overwriting the resource when redeploying resources.
     """
-    service = service_team.split("~")[0]
-    team = service_team.split("~")[0]
+    body = request.get_json()
+    log.info(f'Got body: {body} for zodiac service')
+
+    service = body["service"]
+    team = body["team"]
     templates_dir = "../templates"
     with open(f"{templates_dir}/all-pod-default.yaml", "r") as f:
         all_poddefault_yaml = yaml.load(f, Loader=yaml.FullLoader)
