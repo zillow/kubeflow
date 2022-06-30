@@ -120,7 +120,7 @@ export class JWABackendService extends BackendService {
     const url = `api/namespaces/${namespace}/allpoddefault/zodiacservice/${service}`;
     console.log(`Sending request to ${namespace}, creating all-pod-default. ${service}`)
 
-    return this.http.get<JWABackendResponse>(url).pipe(
+    return this.http.post<JWABackendResponse>(url).pipe(
       catchError(error => this.handleError(error)),
       map(_ => {
         return 'poddefault posted';
