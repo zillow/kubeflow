@@ -85,8 +85,8 @@ def post_zodiac_poddefault(namespace, service_team):
     """ Creates the allpoddefault for individual profiles as a workaround to prevent
         overwriting the resource when redeploying resources.
     """
-    service = service_team.split(":")[0]
-    team = service_team.split(":")[0]
+    service = service_team.split("~")[0]
+    team = service_team.split("~")[0]
     templates_dir = "../templates"
     with open(f"{templates_dir}/all-pod-default.yaml", "r") as f:
         all_poddefault_yaml = yaml.load(f, Loader=yaml.FullLoader)

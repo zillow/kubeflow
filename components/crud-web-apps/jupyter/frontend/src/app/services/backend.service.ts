@@ -116,6 +116,7 @@ export class JWABackendService extends BackendService {
 
   public createAllPodDefault(namespace: string, service: string): Observable<string> {
     // Get owned zodiac services by namespace
+    service = service.replace(":","~")
     const url = `api/namespaces/${namespace}/allpoddefault/zodiacservice/${service}`;
     console.log(`Sending request to ${namespace}, creating all-pod-default. ${service}`)
 

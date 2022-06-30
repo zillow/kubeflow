@@ -122,7 +122,6 @@ export class FormDefaultComponent implements OnInit, OnDestroy {
         "ZODIAC_SERVICE": this.zodiacService.split(":")[0],
         "ZODIAC_TEAM": this.zodiacService.split(":")[1]
       }
-      console.log("here here here " + this.zodiacService);
     }
     delete notebook.zodiacService;
 
