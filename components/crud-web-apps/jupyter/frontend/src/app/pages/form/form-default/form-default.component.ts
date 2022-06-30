@@ -118,10 +118,10 @@ export class FormDefaultComponent implements OnInit, OnDestroy {
       this.zodiacService = notebook.zodiacService;
       // split zodiac service and team from backend as they are returned as a string in the
       // form 'service:team' and set as notebook environment variable.
-      notebook.environment = {
-        "ZODIAC_SERVICE": this.zodiacService.split(":")[0],
-        "ZODIAC_TEAM": this.zodiacService.split(":")[1]
-      }
+      notebook.environment = JSON.stringify([
+        { "name": "ZODIAC_SERVICE", "value": this.zodiacService.split(":")[0] },
+        { "name": "ZODIAC_TEAM", "value": this.zodiacService.split(":")[1] }
+      ]);
     }
     delete notebook.zodiacService;
 
