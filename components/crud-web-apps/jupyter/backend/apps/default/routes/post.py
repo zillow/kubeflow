@@ -90,7 +90,7 @@ def post_zodiac_poddefault(namespace):
 
     service = body["service"]
     team = body["team"]
-    templates_dir = utils.NOTEBOOK_TEMPLATE_YAML
+    templates_dir = utils.ALLPODDEFAULT_TEMPLATE_YAML
     with open(f"{templates_dir}/all-pod-default.yaml", "r") as f:
         all_poddefault_yaml = yaml.load(f, Loader=yaml.FullLoader)
 
