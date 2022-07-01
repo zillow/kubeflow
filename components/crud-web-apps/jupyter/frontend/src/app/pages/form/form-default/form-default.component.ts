@@ -120,7 +120,7 @@ export class FormDefaultComponent implements OnInit, OnDestroy {
     if (notebook.zodiacService) {
       this.zodiacService = notebook.zodiacService;
       // split zodiac service and team from backend as they are returned as a string in the
-      // form 'service:team' and set as notebook environment variable.
+      // form 'service:team' and set as notebook environment variable. 
       notebook.environment = JSON.stringify(
         {
           "ZODIAC_SERVICE": this.zodiacService.split(":")[0],
@@ -191,19 +191,12 @@ export class FormDefaultComponent implements OnInit, OnDestroy {
     const notebook = this.getSubmitNotebook();
 
     // logic for adding zodiac information to poddefaults only for contributor profiles
+    // TODO: AIP-6339. remove this logic once workflow sdk can pick up environment variables.
     if (this.zodiacService) {
       this.backend.createAllPodDefault(notebook.namespace, this.zodiacService).subscribe(() => {
         // do nothing
       });
     }
-    
-    // keep this for future work
-    /*
-    this.backend.addZodiacServicePoddefault(this.zodiacService, notebook.namespace).subscribe(() => {
-      // do nothing
-      console.log("Zodiac Services added to pod-defaults");
-    });
-    */
 
     this.backend.createNotebook(notebook).subscribe(() => {
       this.popup.close();

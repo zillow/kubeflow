@@ -31,6 +31,7 @@ def jsonify_graphql_query_response(graphql_query: str) -> Dict[str, Any]:
     return response.json()
 
 
+# TODO: AIP-6338 save for later when we are able to reach zodiac from the cluster
 def get_contributor_zodiac_metadata(ai_platform_contributor: str) -> Set[str]:
     # Use the old style of string formatting to not over-complicate the GraphQL syntax
     # with weird escaping.
@@ -60,10 +61,9 @@ def get_contributor_zodiac_metadata(ai_platform_contributor: str) -> Set[str]:
 
     return metadata
 
-        #for item in json.loads(zodiac_metadata)['items']:
-        #    print (item)
+
+# TODO: AIP-6338 save for later when we are able to reach zodiac from the cluster
 def _get_ai_platform_engineers() -> Set[str]:
-    # TODO: AIP-6338 Remove when the cluster is able to reach zodiac Graphql
     # Use the old style of string formatting to not over-complicate the GraphQL syntax
     # with weird escaping.
     graphql_query = """{
@@ -81,6 +81,7 @@ def _get_ai_platform_engineers() -> Set[str]:
     return {contributor['login'] for contributor in response_data["data"]["team"]["members"]["items"]}
 
 
+# TODO: AIP-6338 save for later when we are able to reach zodiac from the cluster
 def get_zodiac_services(namespace: str) -> Set[str]:
     """ For individual user namespaces, the user alias is the same as the namespace name.
         Return the set of zodiac services the user belongs to.
