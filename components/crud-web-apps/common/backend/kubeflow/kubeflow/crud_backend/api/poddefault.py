@@ -1,5 +1,6 @@
 from .. import authz
 from . import custom_api
+from kubernetes.client.rest import ApiException
 
 
 def list_poddefaults(namespace):
@@ -10,9 +11,15 @@ def list_poddefaults(namespace):
 
 
 def post_all_poddefault(namespace, body):
-    return custom_api.create_namespaced_custom_object("kubeflow.org", "v1alpha1",
+    try:
+        response = custom_api.create_namespaced_custom_object("kubeflow.org", "v1alpha1",
                                                     namespace, "poddefaults", body)
-
+    except ApiException as e:
+        # if the all-poddefault already exists than delete it
+        if ("AlreadyExists" in e):
+            response = custom_api.replace_namespaced_custom_object("kubeflow.org", "v1alpha1",
+                                                        namespace, "poddefaults", "all-pod-default", body)
+    return response
 
 """
 def patch_zodiac_service(namespace, body):
