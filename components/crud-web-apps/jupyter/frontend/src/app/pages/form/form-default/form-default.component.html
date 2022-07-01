@@ -83,7 +83,7 @@
         mat-raised-button
         color="primary"
         (click)="onSubmit()"
-        [disabled]="!formCtrl.valid || blockSubmit || (formZodiacServiceComponent.isOnboardingNamespace && !zodiacService)"
+        [disabled]="!formCtrl.valid || blockSubmit || (formZodiacServiceComponent.isOnboardingNamespace && !formZodiacServiceComponent.serviceSelection)"
         i18n
       >
         LAUNCH

@@ -14,6 +14,7 @@ export class FormZodiacServiceComponent implements OnInit {
   @Input() services: string[];
 
   public ownedServices = new Set<string>();
+  public serviceSelection: string;
   public isOnboardingNamespace: boolean;
   public hasZodiacServices: boolean;
 

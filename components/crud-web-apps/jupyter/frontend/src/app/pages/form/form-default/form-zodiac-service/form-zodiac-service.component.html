@@ -15,6 +15,7 @@
     <!-- If readonly, then make it an input element instead of select -->
     <mat-label i18n>Zodiac Service</mat-label>
     <mat-select
+      [(ngModel)]="serviceSelection"
       [formControl]="parentForm.get('zodiacService')"
     >
       <mat-option value="" i18n="option None" selected></mat-option>
