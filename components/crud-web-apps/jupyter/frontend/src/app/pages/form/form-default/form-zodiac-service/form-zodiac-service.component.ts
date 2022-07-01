@@ -15,7 +15,7 @@ export class FormZodiacServiceComponent implements OnInit {
 
   public ownedServices = new Set<string>();
   public isOnboardingNamespace: boolean;
-  public notHasZodiacServices: boolean;
+  public hasZodiacServices: boolean;
 
   subscriptions = new Subscription();
 
@@ -37,7 +37,7 @@ export class FormZodiacServiceComponent implements OnInit {
           // get the zodiac services the contributor is a part of
           this.backend.getZodiacServices(namespace).subscribe(services => {
             this.ownedServices = new Set(services);
-            this.notHasZodiacServices = this.ownedServices.size == 0;
+            this.hasZodiacServices = this.ownedServices.size != 0;
           });
 
         }

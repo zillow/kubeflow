@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Config, NotebookFormObject } from 'src/app/types';
 import { Subscription } from 'rxjs';
@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { getFormDefaults, initFormControls } from './utils';
 import { JWABackendService } from 'src/app/services/backend.service';
 import { environment } from '@app/environment';
+import { FormZodiacServiceComponent } from './form-zodiac-service/form-zodiac-service.component';
 
 @Component({
   selector: 'app-form-default',
@@ -20,6 +21,8 @@ import { environment } from '@app/environment';
   styleUrls: ['./form-default.component.scss'],
 })
 export class FormDefaultComponent implements OnInit, OnDestroy {
+  @ViewChild(FormZodiacServiceComponent) formZodiacServiceComponent:FormZodiacServiceComponent
+
   currNamespace = '';
   formCtrl: FormGroup;
   config: Config;

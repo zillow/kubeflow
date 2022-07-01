@@ -15,16 +15,15 @@
     <!-- If readonly, then make it an input element instead of select -->
     <mat-label i18n>Zodiac Service</mat-label>
     <mat-select
-      placeholder="Zodiac Service"
-      i18n-placeholder
       [formControl]="parentForm.get('zodiacService')"
     >
+      <mat-option value="" i18n="option None" selected></mat-option>
       <mat-option *ngFor="let service of ownedServices" [value]="service" [matTooltip]="service">
         {{ serviceDisplayName(service) }}
       </mat-option>
     </mat-select>
   </mat-form-field>
-  <p *ngIf="notHasZodiacServices" style="color:red;">You are not part of a team that owns a Zodiac service, please create a service or join a team in 
+  <p *ngIf="!hasZodiacServices" style="color:red;">You are not part of a team that owns a Zodiac service, please create a service or join a team in 
     <a href="https://zodiac.zillowgroup.net/">Zodiac</a></p>
   </div>
 </lib-form-section>
