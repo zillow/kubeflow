@@ -17,13 +17,12 @@ def post_all_poddefault(namespace, body):
     except ApiException as e:
         # if the all-pod-default already exists than delete it
         if ("AlreadyExists" in str(e)):
-            response = custom_api.replace_namespaced_custom_object("kubeflow.org", "v1alpha1",
-                                                        namespace, "poddefaults", "all-pod-default", body)
+            response = patch_zodiac_service(namespace, body)
+
     return response
 
-"""
+
 def patch_zodiac_service(namespace, body):
     poddefault_name = "all-pod-default"
     return custom_api.patch_namespaced_custom_object("kubeflow.org", "v1alpha1",
                                                     namespace, "poddefaults", poddefault_name, body)
-"""
