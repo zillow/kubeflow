@@ -15,8 +15,8 @@ def post_all_poddefault(namespace, body):
         response = custom_api.create_namespaced_custom_object("kubeflow.org", "v1alpha1",
                                                     namespace, "poddefaults", body)
     except ApiException as e:
-        # if the all-poddefault already exists than delete it
-        if ("AlreadyExists" in e):
+        # if the all-pod-default already exists than delete it
+        if ("AlreadyExists" in str(e)):
             response = custom_api.replace_namespaced_custom_object("kubeflow.org", "v1alpha1",
                                                         namespace, "poddefaults", "all-pod-default", body)
     return response
