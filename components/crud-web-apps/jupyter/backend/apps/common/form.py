@@ -329,7 +329,6 @@ def set_notebook_environment(notebook, body, defaults):
     if env is None:
         return
 
-    log.info(f'in environment function {env}')
     # FIXME: Validate the environment?
     env = json.loads(env) if env else {}
     env = [{"name": name, "value": str(value)} for name, value in env.items()]
