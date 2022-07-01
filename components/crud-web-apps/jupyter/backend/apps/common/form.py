@@ -325,13 +325,14 @@ def set_notebook_shm(notebook, body, defaults):
 
 
 def set_notebook_environment(notebook, body, defaults):
-    env = get_form_value(body, defaults, "environment")
+    env = get_form_value(body, defaults, "environment", optional=True)
+    if env is None:
+        return
+
     log.info(f'in environment function {env}')
     # FIXME: Validate the environment?
     env = json.loads(env) if env else {}
-    log.info(f'first {env}')
     env = [{"name": name, "value": str(value)} for name, value in env.items()]
-    log.info(env)
     notebook["spec"]["template"]["spec"]["containers"][0]["env"] += env
 
 

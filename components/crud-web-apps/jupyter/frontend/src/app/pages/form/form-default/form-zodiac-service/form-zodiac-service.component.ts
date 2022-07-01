@@ -29,7 +29,6 @@ export class FormZodiacServiceComponent implements OnInit {
     this.parentForm
       .get('zodiacService');
 
-
     // check if this namespace was created by aip-onboarding-service
     const curNamespace = this.namespaceService.getSelectedNamespace().subscribe(namespace => {
       this.backend.getCreatedByAipOnboardingService(namespace).subscribe(isOnboardingNamespace => {
@@ -38,7 +37,6 @@ export class FormZodiacServiceComponent implements OnInit {
           // get the zodiac services the contributor is a part of
           this.backend.getZodiacServices(namespace).subscribe(services => {
             this.ownedServices = new Set(services);
-            console.log(this.ownedServices.size)
             this.notHasZodiacServices = this.ownedServices.size == 0;
           });
 
