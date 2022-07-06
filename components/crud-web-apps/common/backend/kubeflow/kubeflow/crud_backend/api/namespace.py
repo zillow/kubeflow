@@ -20,7 +20,7 @@ def namespace_created_by_aip_onboarding_service(namespace: str) -> bool:
     try:
         response = v1_core.list_namespace(field_selector=metadata_name)
     except ApiException as e:
-        print (f'Exception when calling CoreV1Api->list_namespace: {e}\n')
+        log.error(f'Exception when calling CoreV1Api->list_namespace: {e}\n')
         return False
 
     response_dict = utils.serialize(response)

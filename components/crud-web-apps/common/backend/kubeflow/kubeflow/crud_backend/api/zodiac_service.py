@@ -3,6 +3,7 @@ import os
 import json
 
 from kubeflow.kubeflow.crud_backend import api, logging
+from kubernetes.client.exceptions import ApiException
 from typing import Any, Dict, Set
 from requests import HTTPError
 
@@ -109,11 +110,11 @@ def get_contributor_zodiac_configmap(namespace: str) -> Set[str]:
         in the format 'service:team'.
     """
     log.info(f'Gathering zodiac metadata for {namespace} from contributor configmap.')
-    service_list = json.loads(api.list_contributor_zodiac_configmap(namespace)["items"][0]["data"]["zodiac-data.json"])
-    log.info(f'Retrieved configmap from namespace {namespace}')
     metadata = set()
-    # account for possible upstream error retrieving the configmap
-    if (service_list.get("key") == "error"):
+    try: 
+        service_list = json.loads(api.list_contributor_zodiac_configmap(namespace)["items"][0]["data"]["zodiac-data.json"])
+        log.info(f'Retrieved configmap from namespace {namespace}')
+    except ApiException:
         return metadata
 
     for service_team in service_list["items"]:
