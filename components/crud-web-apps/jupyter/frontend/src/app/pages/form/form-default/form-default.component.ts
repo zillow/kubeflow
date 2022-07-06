@@ -190,7 +190,7 @@ export class FormDefaultComponent implements OnInit, OnDestroy {
     this.popup.open('Submitting new Notebook...', SnackType.Info, 3000);
     const notebook = this.getSubmitNotebook();
 
-    // logic for adding zodiac information to poddefaults only for contributor profiles
+    // logic for adding zodiac information to poddefaults only for contributor profiles 
     // TODO: AIP-6339. remove this logic once workflow sdk can pick up environment variables.
     if (this.zodiacService) {
       this.backend.createAllPodDefault(notebook.namespace, this.zodiacService).subscribe(() => {
