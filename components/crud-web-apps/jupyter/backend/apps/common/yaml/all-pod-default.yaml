@@ -64,8 +64,6 @@ spec:
     value: "{{ user_email }}"
   - name: KFP_RUN_URL_PREFIX
     value: "https://kubeflow.corp.stage-k8s.zg-aip.net/"
-  - name: METAFLOW_ARTIFACT_LOCALROOT
-    value: "/opt/metaflow_volume"
   - name: METAFLOW_DEFAULT_DATASTORE
     value: "s3"
   - name: METAFLOW_DEFAULT_METADATA
