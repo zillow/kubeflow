@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Config, NotebookFormObject } from 'src/app/types';
 import { Subscription } from 'rxjs';
@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { getFormDefaults, initFormControls } from './utils';
 import { JWABackendService } from 'src/app/services/backend.service';
 import { environment } from '@app/environment';
+import { FormZodiacServiceComponent } from './form-zodiac-service/form-zodiac-service.component';
 
 @Component({
   selector: 'app-form-default',
@@ -20,9 +21,12 @@ import { environment } from '@app/environment';
   styleUrls: ['./form-default.component.scss'],
 })
 export class FormDefaultComponent implements OnInit, OnDestroy {
+  @ViewChild(FormZodiacServiceComponent) formZodiacServiceComponent:FormZodiacServiceComponent
+
   currNamespace = '';
   formCtrl: FormGroup;
   config: Config;
+  zodiacService = '';
 
   ephemeral = false;
   defaultStorageclass = false;
@@ -112,6 +116,20 @@ export class FormDefaultComponent implements OnInit, OnDestroy {
     delete notebook.imageGroupOne;
     delete notebook.imageGroupTwo;
 
+    // delete temp zodiac field as this is not needed for backend notebook creation
+    if (notebook.zodiacService) {
+      this.zodiacService = notebook.zodiacService;
+      // split zodiac service and team from backend as they are returned as a string in the
+      // form 'service:team' and set as notebook environment variable. 
+      notebook.environment = JSON.stringify(
+        {
+          "ZODIAC_SERVICE": this.zodiacService.split(":")[0],
+          "ZODIAC_TEAM": this.zodiacService.split(":")[1]
+        }
+      );
+    }
+    delete notebook.zodiacService;
+
     // Ensure CPU input is a string
     if (typeof notebook.cpu === 'number') {
       notebook.cpu = notebook.cpu.toString();
@@ -170,8 +188,16 @@ export class FormDefaultComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     this.popup.open('Submitting new Notebook...', SnackType.Info, 3000);
-
     const notebook = this.getSubmitNotebook();
+
+    // logic for adding zodiac information to poddefaults only for contributor profiles 
+    // TODO: AIP-6339. remove this logic once workflow sdk can pick up environment variables.
+    if (this.zodiacService) {
+      this.backend.createAllPodDefault(notebook.namespace, this.zodiacService).subscribe(() => {
+        // do nothing
+      });
+    }
+
     this.backend.createNotebook(notebook).subscribe(() => {
       this.popup.close();
       this.popup.open(

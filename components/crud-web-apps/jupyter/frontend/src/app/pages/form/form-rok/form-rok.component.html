@@ -67,6 +67,11 @@
         [affinityConfigs]="config?.affinityConfig?.options"
         [tolerationGroups]="config?.tolerationGroup?.options"
       ></app-form-affinity-tolerations>
+      
+      <app-form-zodiac-service
+        [parentForm]="formCtrl"
+        [services]="config?.zodiacService?.options"
+      ></app-form-zodiac-service>
 
       <app-form-advanced-options
         [parentForm]="formCtrl"

@@ -76,3 +76,24 @@ def get_gpu_vendors():
     available_vendors = installed_resources.intersection(config_vendor_keys)
 
     return api.success_response("vendors", list(available_vendors))
+
+
+@bp.route("/api/namespaces/<namespace>/services")
+def get_zodiac_services(namespace):
+    """ Return a list of zodiac services by which the current user's team owns.
+    """
+    # Get all of the zodiac services
+    log.info(f'Gathering zodiac services for namespace {namespace}.')
+    owned_services = api.get_contributor_zodiac_configmap(namespace)
+
+    return api.success_response("services", list(owned_services))
+
+
+@bp.route("/api/namespaces/<namespace>/onboarding-service-namespace")
+def get_namespace_created_by_aip_onboarding_service(namespace):
+    """ Return whether a namespace was created by aip-onboarding-service.
+    """
+    log.info(f'Entering validation if namespace {namespace} was created by aip-onboarding-service.')
+    is_aip_onboarding_service_namespace = api.namespace_created_by_aip_onboarding_service(namespace)
+
+    return api.success_response("isonboardingnamespace", str(is_aip_onboarding_service_namespace))

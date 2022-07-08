@@ -77,6 +77,31 @@ export class JWABackendService extends BackendService {
     );
   }
 
+  // check if this namespace was created by aip-onboarding-service
+  public getCreatedByAipOnboardingService(namespace: string): Observable<string> {
+    const url = `api/namespaces/${namespace}/onboarding-service-namespace`;
+
+    return this.http.get<JWABackendResponse>(url).pipe(
+      catchError(error => this.handleError(error)),
+      map(data => {
+        return data.isonboardingnamespace;
+      }),
+    );
+  }
+
+  // get the current contributor zodiac services
+  public getZodiacServices(namespace: string): Observable<string[]> {
+    // Get owned zodiac services by namespace
+    const url = `api/namespaces/${namespace}/services`;
+
+    return this.http.get<JWABackendResponse>(url).pipe(
+      catchError(error => this.handleError(error)),
+      map(data =>  {
+        return data.services.sort((a, b) => a < b ? -1 : 1);
+    }),
+    );
+  }
+
   // POST
   public createNotebook(notebook: NotebookFormObject): Observable<string> {
     const url = `api/namespaces/${notebook.namespace}/notebooks`;
@@ -85,6 +110,30 @@ export class JWABackendService extends BackendService {
       catchError(error => this.handleError(error)),
       map(_ => {
         return 'posted';
+      }),
+    );
+  }
+
+  /** We genereate the poddefault in JWA in order to prevent writing over the resource file 
+   *  everytime we deploy the profile repo. This will ensure there is no gap in zodiac metadata
+   *  in the poddefault.
+   * 
+   *  TODO: AIP-6339 Remove this logic once zodiac srvice en variables are picked up by workflow
+   *  sdk and we no longer have a need to generate poddefualt in JWA.
+  */
+  public createAllPodDefault(namespace: string, service_team: string): Observable<string> {
+    const payload = {
+      'service': service_team.split(":")[0], 
+      'team': service_team.split(":")[1]
+    };
+    // Get owned zodiac services by namespace
+    const url = `api/namespaces/${namespace}/allpoddefault`;
+    console.log(`Sending request to ${namespace}, creating all-pod-default. ${payload}`)
+
+    return this.http.post<JWABackendResponse>(url, payload).pipe(
+      catchError(error => this.handleError(error)),
+      map(_ => {
+        return 'poddefault posted';
       }),
     );
   }

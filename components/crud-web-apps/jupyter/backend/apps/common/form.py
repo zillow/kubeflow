@@ -325,11 +325,16 @@ def set_notebook_shm(notebook, body, defaults):
 
 
 def set_notebook_environment(notebook, body, defaults):
-    env = get_form_value(body, defaults, "environment")
+    env = get_form_value(body, defaults, "environment", optional=True)
+    # We do nothing and return here if the Notebook object does not have environment
+    # variables to add to the k8s Notebook CRD. We do this to account for AIP project namespace
+    # notebooks which will not have Zodiac environment variables. Only individual profile 
+    # notebooks will have environment variables to parse.
+    if env is None:
+        return
 
     # FIXME: Validate the environment?
     env = json.loads(env) if env else {}
-
     env = [{"name": name, "value": str(value)} for name, value in env.items()]
     notebook["spec"]["template"]["spec"]["containers"][0]["env"] += env
 

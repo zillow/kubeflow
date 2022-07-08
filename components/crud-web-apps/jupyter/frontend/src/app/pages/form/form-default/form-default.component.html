@@ -68,6 +68,11 @@
         [tolerationGroups]="config?.tolerationGroup?.options"
       ></app-form-affinity-tolerations>
 
+      <app-form-zodiac-service
+      [parentForm]="formCtrl"
+      [services]="config?.zodiacService?.options"
+    ></app-form-zodiac-service>
+
       <app-form-advanced-options
         [parentForm]="formCtrl"
       ></app-form-advanced-options>
@@ -78,7 +83,7 @@
         mat-raised-button
         color="primary"
         (click)="onSubmit()"
-        [disabled]="!formCtrl.valid || blockSubmit"
+        [disabled]="!formCtrl.valid || blockSubmit || (formZodiacServiceComponent.isOnboardingNamespace && !formZodiacServiceComponent.serviceSelection)"
         i18n
       >
         LAUNCH

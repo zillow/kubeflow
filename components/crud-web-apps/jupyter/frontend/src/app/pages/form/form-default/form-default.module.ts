@@ -22,6 +22,7 @@ import { FormWorkspaceVolumeComponent } from './form-workspace-volume/form-works
 import { FormDataVolumesComponent } from './form-data-volumes/form-data-volumes.component';
 import { FormConfigurationsComponent } from './form-configurations/form-configurations.component';
 import { FormAffinityTolerationsComponent } from './form-affinity-tolerations/form-affinity-tolerations.component';
+import { FormZodiacServiceComponent } from './form-zodiac-service/form-zodiac-service.component';
 import { VolumeModule } from './volume/volume.module';
 
 @NgModule({
@@ -36,6 +37,7 @@ import { VolumeModule } from './volume/volume.module';
     FormAdvancedOptionsComponent,
     FormConfigurationsComponent,
     FormAffinityTolerationsComponent,
+    FormZodiacServiceComponent,
   ],
   imports: [
     CommonModule,
@@ -59,6 +61,7 @@ import { VolumeModule } from './volume/volume.module';
     FormAdvancedOptionsComponent,
     FormConfigurationsComponent,
     FormAffinityTolerationsComponent,
+    FormZodiacServiceComponent,
   ],
 })
 export class FormDefaultModule {}

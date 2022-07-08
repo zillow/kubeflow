@@ -1,0 +1,30 @@
+<lib-form-section
+  title="Zodiac Service"
+  text="Specify the Zodiac service you would like associated to this notebook server and its spawned
+        workflow runs."
+  i18n-title="Title for the zodiac service section of the form"
+  i18n-text="Text for the zodiac service form section"
+  *ngIf="isOnboardingNamespace"
+>
+  <div class="flex-column">
+
+  <mat-form-field
+    class="wide"
+    appearance="outline"
+  >
+    <!-- If readonly, then make it an input element instead of select -->
+    <mat-label i18n>Zodiac Service</mat-label>
+    <mat-select
+      [(ngModel)]="serviceSelection"
+      [formControl]="parentForm.get('zodiacService')"
+    >
+      <mat-option value="" i18n="option None" selected></mat-option>
+      <mat-option *ngFor="let service of ownedServices" [value]="service" [matTooltip]="service">
+        {{ serviceDisplayName(service) }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <p *ngIf="!hasZodiacServices" style="color:red;">You are not part of a team that owns a Zodiac service, please create a service or join a team in 
+    <a href="https://zodiac.zillowgroup.net/">Zodiac</a></p>
+  </div>
+</lib-form-section>

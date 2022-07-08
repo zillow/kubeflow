@@ -45,6 +45,7 @@ export function getFormDefaults(): FormGroup {
     }),
     affinityConfig: ['', []],
     tolerationGroup: ['', []],
+    zodiacService: ['',  []],
     datavols: fb.array([]),
     shm: [true, []],
     configurations: [[], []],

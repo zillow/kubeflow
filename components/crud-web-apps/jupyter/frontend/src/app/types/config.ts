@@ -85,6 +85,12 @@ export interface Config {
     readOnly?: boolean;
   };
 
+  zodiacService?: {
+    value: string;
+    options: string[];
+    readOnly?: boolean;
+  }
+
   configurations?: {
     value: string[];
     readOnly?: boolean;
