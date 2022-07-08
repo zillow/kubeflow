@@ -105,7 +105,7 @@ def post_zodiac_poddefault(namespace):
     envs = all_poddefault_yaml["spec"]["env"]
     for env in envs:
         if (env["name"] == "METAFLOW_DATASTORE_SYSROOT_S3"):
-            env["value"] = f"s3://serve-datalake-zillowgroup/zillow/workflow_sdk/metaflow_28d/dev/{service}"
+            env["value"] = f"s3://serve-datalake-zillowgroup/zillow/workflow_sdk/metaflow_28d/dev/aip-contributors-datalake-access/{service}"
         if (env["name"] == "METAFLOW_NOTIFY_ON_ERROR"):
             env["value"] = f"{namespace}@zillowgroup.com"
 
