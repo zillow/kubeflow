@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import {
   FormGroup,
   ValidatorFn,
@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './form-name.component.html',
   styleUrls: ['./form-name.component.scss'],
 })
-export class FormCullIdleTimeComponent implements OnInit, OnDestroy {
+export class FormCullIdleTimeComponent implements OnInit {
   subscriptions = new Subscription();
   existingNotebooks: Set<string> = new Set<string>();
 
