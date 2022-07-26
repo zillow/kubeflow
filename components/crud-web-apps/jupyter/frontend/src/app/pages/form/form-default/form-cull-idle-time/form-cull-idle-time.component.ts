@@ -32,7 +32,7 @@ export class FormCullIdleTimeComponent implements OnInit {
       return $localize`The cull idle time must be a number!`;
     }
     else if (numberCtrl.hasError('notValidRange')) {
-      return $localize`The cull idle time must be a greater than 0 and less than 900 minutes!`;
+      return $localize`The cull idle time must be greater than 0 and less than or equal to 900 minutes!`;
     }
   }
 
