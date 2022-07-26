@@ -37,7 +37,7 @@ export class FormCullIdleTimeComponent implements OnInit {
   }
 
   private cullIdleTimeValidator(): ValidatorFn {
-    // Make that the cull idle time is either a number or within
+    // Make sure that the cull idle time is either a number or within
     // the correct range we expect for the cull idle time.
     return (control: AbstractControl): { [key: string]: any } => {
       const num = this.parentForm.get('cullIdleTime').value;
