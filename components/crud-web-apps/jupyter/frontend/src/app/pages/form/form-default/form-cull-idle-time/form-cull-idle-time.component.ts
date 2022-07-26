@@ -41,11 +41,12 @@ export class FormCullIdleTimeComponent implements OnInit {
     // the correct range we expect for the cull idle time.
     return (control: AbstractControl): { [key: string]: any } => {
       const num = this.parentForm.get('cullIdleTime').value;
+      console.log(num);
 
       if (num === '') {
         return null;
       }
-      else if (!isNaN(Number(num))) {
+      else if (isNaN(num)) {
         return { notValidNumber: true };
       } else if (Number(num) < 0 && Number(num) > 900) {
         return { notValidRange: true };
