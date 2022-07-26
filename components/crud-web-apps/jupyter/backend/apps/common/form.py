@@ -341,9 +341,10 @@ def set_notebook_environment(notebook, body, defaults):
 
 def set_notebook_culling_annotation(notebook, body, defaults):
     annotation_value = get_form_value(body, defaults, "cullIdleTime")
-    if annotation_value == "0":
+    if not annotation_value or annotation_value == "0":
         return
 
+    log.info(f"Setting notebook {notebook['metadata']['name']} annotation aip.zillowgroup.net/cull-idle-time={annotation_value}")
     notebook["metadata"]["annotations"]["aip.zillowgroup.net/cull-idle-time"] = annotation_value
 
 
