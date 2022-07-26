@@ -47,7 +47,7 @@ export class FormCullIdleTimeComponent implements OnInit {
       }
       else if (isNaN(num)) {
         return { notValidNumber: true };
-      } else if (+num < 0 || +num > 900) {
+      } else if (+num <= 0 || +num > 900) {
         console.log(num)
         return { notValidRange: true };
       }
