@@ -116,6 +116,11 @@ export class FormDefaultComponent implements OnInit, OnDestroy {
     delete notebook.imageGroupOne;
     delete notebook.imageGroupTwo;
 
+    // ensure cullIdleTime is a string
+    if (typeof notebook.cullIdleTime === 'number') {
+      notebook.cullIdleTime = notebook.cullIdleTime.toString()
+    }
+
     // delete temp zodiac field as this is not needed for backend notebook creation
     if (notebook.zodiacService) {
       this.zodiacService = notebook.zodiacService;

@@ -37,6 +37,7 @@ def post_pvc(namespace):
     form.set_notebook_environment(notebook, body, defaults)
     form.set_notebook_affinity(notebook, body, defaults)
     form.set_notebook_configurations(notebook, body, defaults)
+    form.set_notebook_culling_annotation(notebook, body, defaults)
     form.set_notebook_shm(notebook, body, defaults)
 
     # Notebook volumes

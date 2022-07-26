@@ -85,6 +85,11 @@ export interface Config {
     readOnly?: boolean;
   };
 
+  cullIdleTime?: {
+    value: string;
+    readOnly?: boolean;
+  }
+
   zodiacService?: {
     value: string;
     options: string[];

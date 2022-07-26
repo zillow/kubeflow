@@ -339,6 +339,14 @@ def set_notebook_environment(notebook, body, defaults):
     notebook["spec"]["template"]["spec"]["containers"][0]["env"] += env
 
 
+def set_notebook_culling_annotation(notebook, body, defaults):
+    annotation_value = get_form_value(body, defaults, "cullIdleTime")
+    if annotation_value == "0":
+        return
+
+    notebook["metadata"]["annotations"]["aip.zillowgroup.net/cull-idle-time"] = annotation_value
+
+
 # Volume add functions
 def add_notebook_volume(notebook, vol_name, claim, mnt_path):
     spec = notebook["spec"]["template"]["spec"]

@@ -54,5 +54,6 @@ export interface NotebookFormObject {
   datavols: any[];
   shm: boolean;
   configurations: PodDefault[];
+  cullIdleTime?: string;
   zodiacService?: string;
 }

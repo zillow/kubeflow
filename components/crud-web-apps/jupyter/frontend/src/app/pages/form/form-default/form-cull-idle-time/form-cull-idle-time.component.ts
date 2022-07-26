@@ -7,9 +7,9 @@ import {
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-form-name-namespace',
-  templateUrl: './form-name.component.html',
-  styleUrls: ['./form-name.component.scss'],
+  selector: 'app-form-cull-idle-time',
+  templateUrl: './form-cull-idle-time.component.html',
+  styleUrls: ['./form-cull-idle-time.component.scss'],
 })
 export class FormCullIdleTimeComponent implements OnInit {
   subscriptions = new Subscription();
