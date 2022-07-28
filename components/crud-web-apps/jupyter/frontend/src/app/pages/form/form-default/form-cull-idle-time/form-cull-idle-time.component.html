@@ -1,0 +1,27 @@
+<lib-form-section 
+  title="Cull Idle Time"
+  text="Optional. Set a cull idle time (in minutes) for this notebook server. It is the amount of time 
+        a notebook can be idle before being culled. If not set, the default cull idle time is 90 minutes."
+  i18n-title="Title for the cull idle time section of the form"
+  i18n-text="Text for the cull idle time form section"
+>
+<div class="flex-column">
+
+  <mat-form-field
+  class="wide"
+  appearance="outline"
+  >
+    <mat-label i18n>Cull Idle Time</mat-label>
+    <input
+      matInput
+      [formControl]="parentForm.get('cullIdleTime')"
+      ng-trim="false"
+      maxLength="4"
+      value="0"
+    >
+    <mat-error>{{ getNumberError() }}</mat-error>
+  </mat-form-field>
+
+</div>
+
+</lib-form-section>

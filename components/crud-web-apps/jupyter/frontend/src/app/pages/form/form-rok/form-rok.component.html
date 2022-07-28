@@ -68,6 +68,10 @@
         [tolerationGroups]="config?.tolerationGroup?.options"
       ></app-form-affinity-tolerations>
       
+      <app-form-cull-idle-time
+        [parentForm]="formCtrl"
+      ></app-form-cull-idle-time>
+
       <app-form-zodiac-service
         [parentForm]="formCtrl"
         [services]="config?.zodiacService?.options"

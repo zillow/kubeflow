@@ -22,6 +22,7 @@ import { FormWorkspaceVolumeComponent } from './form-workspace-volume/form-works
 import { FormDataVolumesComponent } from './form-data-volumes/form-data-volumes.component';
 import { FormConfigurationsComponent } from './form-configurations/form-configurations.component';
 import { FormAffinityTolerationsComponent } from './form-affinity-tolerations/form-affinity-tolerations.component';
+import { FormCullIdleTimeComponent } from './form-cull-idle-time/form-cull-idle-time.component';
 import { FormZodiacServiceComponent } from './form-zodiac-service/form-zodiac-service.component';
 import { VolumeModule } from './volume/volume.module';
 
@@ -37,6 +38,7 @@ import { VolumeModule } from './volume/volume.module';
     FormAdvancedOptionsComponent,
     FormConfigurationsComponent,
     FormAffinityTolerationsComponent,
+    FormCullIdleTimeComponent,
     FormZodiacServiceComponent,
   ],
   imports: [
@@ -61,6 +63,7 @@ import { VolumeModule } from './volume/volume.module';
     FormAdvancedOptionsComponent,
     FormConfigurationsComponent,
     FormAffinityTolerationsComponent,
+    FormCullIdleTimeComponent,
     FormZodiacServiceComponent,
   ],
 })
