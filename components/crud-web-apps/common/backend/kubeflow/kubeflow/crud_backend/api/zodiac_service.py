@@ -1,38 +1,25 @@
 import requests
-import os
-import json
 
 from kubeflow.kubeflow.crud_backend import api, logging
-from kubernetes.client.exceptions import ApiException
 from typing import Any, Dict, Set
-from requests import HTTPError
 
 
 log = logging.getLogger(__name__)
-ZODIAC_GRAPHQL_URL = "https://zodiac-graphql.prod.kong.zg-int.net"
-GRAPHQL_KONG_APIKEY = os.environ.get("ZODIAC_GRAPHQL_KONG_APIKEY", None)
+ZODIAC_GRAPHQL_URL = "https://zodiac-graphql.zgtools.net/"
 
 
 def jsonify_graphql_query_response(graphql_query: str) -> Dict[str, Any]:
-    request_data = json.dumps({"query": graphql_query}).encode("utf-8")
-    headers = {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        "Connection": "keep-alive",
-        "Origin": ZODIAC_GRAPHQL_URL,
-        "apikey": GRAPHQL_KONG_APIKEY
-    }
+    header = {"Content-Type": "application/json"}  
     log.info(f'Calling zodiac graphql with url {ZODIAC_GRAPHQL_URL}')
     try:
-        response = requests.post(ZODIAC_GRAPHQL_URL, data=request_data, headers=headers)
-    except HTTPError as e:
+        response = requests.post(ZODIAC_GRAPHQL_URL, json={"query": graphql_query}, headers=header)
+    except requests.HTTPError as e:
         log.error(f"Error when calling zodiac graphql {e.read().decode('utf-8')}")
         raise Exception(f"Error {e.code} occurred, reason: {e.read().decode('utf-8')}")
 
     return response.json()
 
 
-# TODO: AIP-6338 save for later when we are able to reach zodiac from the cluster
 def get_contributor_zodiac_metadata(ai_platform_contributor: str) -> Set[str]:
     # Use the old style of string formatting to not over-complicate the GraphQL syntax
     # with weird escaping.
@@ -63,7 +50,6 @@ def get_contributor_zodiac_metadata(ai_platform_contributor: str) -> Set[str]:
     return metadata
 
 
-# TODO: AIP-6338 save for later when we are able to reach zodiac from the cluster
 def _get_ai_platform_engineers() -> Set[str]:
     # Use the old style of string formatting to not over-complicate the GraphQL syntax
     # with weird escaping.
@@ -82,8 +68,7 @@ def _get_ai_platform_engineers() -> Set[str]:
     return {contributor['login'] for contributor in response_data["data"]["team"]["members"]["items"]}
 
 
-# TODO: AIP-6338 save for later when we are able to reach zodiac from the cluster
-def get_zodiac_services(namespace: str) -> Set[str]:
+def get_zodiac_metadata(namespace: str) -> Set[str]:
     """ For individual user namespaces, the user alias is the same as the namespace name.
         Return the set of zodiac services the user belongs to.
     """
@@ -100,25 +85,3 @@ def get_zodiac_services(namespace: str) -> Set[str]:
                 _zodiac_metadata.remove(service_team)
 
     return _zodiac_metadata
-
-
-# TODO: AIP-6338. Remove this method and subsequent configmap api calls
-# and revert back to other zodiac logic in this file once we are able to
-# access zodiac graphql from the aianalytics clusters.
-def get_contributor_zodiac_configmap(namespace: str) -> Set[str]:
-    """ Returns the contributor zodiac service and team data as a string
-        in the format 'service:team'.
-    """
-    log.info(f'Gathering zodiac metadata for {namespace} from contributor configmap.')
-    metadata = set()
-    try: 
-        service_list = json.loads(api.list_contributor_zodiac_configmap(namespace)["items"][0]["data"]["zodiac-data.json"])
-        log.info(f'Retrieved configmap from namespace {namespace}')
-    except ApiException:
-        return metadata
-
-    for service_team in service_list["items"]:
-        zodiac_tuple = service_team["name"] + ":" + service_team["teamName"]
-        metadata.add(zodiac_tuple)
-
-    return metadata
