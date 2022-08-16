@@ -42,11 +42,6 @@ spec:
     valueFrom:
       fieldRef:
         fieldPath: status.podIP
-  # used by Metaflow Notify Email, to include in the body
-  - name: ARGO_WORKFLOW_NAME
-    valueFrom:
-      fieldRef:
-        fieldPath: metadata.labels['workflows.argoproj.io/workflow']
   - name: K8S_CLUSTER_NAME
     value: aianalytics-stage-k8s-1
   - name: K8S_CLUSTER_ENV
