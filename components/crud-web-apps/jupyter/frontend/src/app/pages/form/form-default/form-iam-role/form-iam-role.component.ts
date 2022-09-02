@@ -36,14 +36,11 @@ export class FormIamRoleComponent implements OnInit {
       .setValidators([this.iamRoleValidator()]);
 
     // check if this namespace was created by aip-onboarding-service
-    /*const curNamespace = this.namespaceService.getSelectedNamespace().subscribe(namespace => {
+    const curNamespace = this.namespaceService.getSelectedNamespace().subscribe(namespace => {
       this.backend.getCreatedByAipOnboardingService(namespace).subscribe(isOnboardingNamespace => {
         this.isOnboardingNamespace = isOnboardingNamespace.toLowerCase() == 'true';
-        if (this.isOnboardingNamespace) {
-        }
-
       });
-    });*/
+    });
 
     //this.subscriptions.add(curNamespace);
   }
