@@ -32,7 +32,7 @@ def create_rolebinding(namespace: str, name: str):
         log.error(f'Exception when calling CoreV1Api->create_namespaced_role_binding: {e}\n')
 
 
-def get_rolebinding(namespace: str, name: str) -> client.client.V1RoleBinding:
+def get_rolebinding(namespace: str, name: str) -> client.V1RoleBinding:
     field_selector = f'metadata.name={name}'
     return rbac_client.list_namespaced_role_binding(
         namespace, field_selector=field_selector
