@@ -331,11 +331,11 @@ def set_notebook_environment(notebook, body, defaults):
     # variables to add to the k8s Notebook CRD. We do this to account for AIP project namespace
     # notebooks which will not have Zodiac environment variables. Only individual profile 
     # notebooks will have environment variables to parse.
-    if env is None:
-        return
+    #if env is None:
+    #    return
 
     # FIXME: Validate the environment?
-    env = json.loads(env) if env else {}
+    env = env if env else {}
     env = [{"name": name, "value": str(value)} for name, value in env.items()]
     notebook["spec"]["template"]["spec"]["containers"][0]["env"] += env
 
