@@ -76,7 +76,7 @@ def post_pvc(namespace):
     '''
     sa_rb_resource_name = form.create_notebook_service_account(notebook, body, defaults)
     if sa_rb_resource_name:
-        iam_role = get_form_value(body, defaults, "iamRole")    
+        iam_role = form.get_form_value(body, defaults, "iamRole")    
         # create the serviceaccount and rolebinding
         api.create_serviceaccount(namespace, sa_rb_resource_name, iam_role)
         api.create_rolebinding(namespace, sa_rb_resource_name)
