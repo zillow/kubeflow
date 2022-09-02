@@ -24,6 +24,7 @@ import { FormConfigurationsComponent } from './form-configurations/form-configur
 import { FormAffinityTolerationsComponent } from './form-affinity-tolerations/form-affinity-tolerations.component';
 import { FormCullIdleTimeComponent } from './form-cull-idle-time/form-cull-idle-time.component';
 import { FormZodiacServiceComponent } from './form-zodiac-service/form-zodiac-service.component';
+import { FormIamRoleComponent } from './form-iam-role/form-iam-role.component';
 import { VolumeModule } from './volume/volume.module';
 
 @NgModule({
@@ -40,6 +41,7 @@ import { VolumeModule } from './volume/volume.module';
     FormAffinityTolerationsComponent,
     FormCullIdleTimeComponent,
     FormZodiacServiceComponent,
+    FormIamRoleComponent,
   ],
   imports: [
     CommonModule,
@@ -65,6 +67,7 @@ import { VolumeModule } from './volume/volume.module';
     FormAffinityTolerationsComponent,
     FormCullIdleTimeComponent,
     FormZodiacServiceComponent,
+    FormIamRoleComponent,
   ],
 })
 export class FormDefaultModule {}

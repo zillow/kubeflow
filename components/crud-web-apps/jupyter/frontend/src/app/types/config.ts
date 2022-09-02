@@ -96,6 +96,12 @@ export interface Config {
     readOnly?: boolean;
   }
 
+  iamRole?: {
+    value: string;
+    options: string[];
+    readOnly?: boolean;
+  }
+
   configurations?: {
     value: string[];
     readOnly?: boolean;

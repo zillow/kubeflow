@@ -56,4 +56,5 @@ export interface NotebookFormObject {
   configurations: PodDefault[];
   cullIdleTime?: string;
   zodiacService?: string;
+  iamRole?: string;
 }
