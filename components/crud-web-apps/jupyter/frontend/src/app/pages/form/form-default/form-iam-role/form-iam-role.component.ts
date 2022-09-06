@@ -3,7 +3,6 @@ import {
   FormGroup,
   ValidatorFn,
   AbstractControl,
-  Validators,
 } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { JWABackendService } from 'src/app/services/backend.service';
@@ -31,10 +30,7 @@ export class FormIamRoleComponent implements OnInit {
     // select the available zodiac service
     this.parentForm
       .get('iamRole')
-      .setValidators([ 
-        Validators.pattern('^arn:aws:iam::\d{12}:role\/[A-Za-z0-9]+(?:-[A-Za-z0-9]+)+$'),
-        this.iamRoleValidator(),
-      ]);
+      .setValidators([this.iamRoleValidator()]);
 
     // check if this namespace was created by aip-onboarding-service
     const curNamespace = this.namespaceService.getSelectedNamespace().subscribe(namespace => {
@@ -42,13 +38,14 @@ export class FormIamRoleComponent implements OnInit {
         this.isOnboardingNamespace = isOnboardingNamespace.toLowerCase() == 'true';
       });
     });
-
-    //this.subscriptions.add(curNamespace);
   }
 
   public getRoleError() {
     const roleCtrl = this.parentForm.get('iamRole');
 
+    if (roleCtrl.hasError('notValidRegex')) {
+      return $localize`IAM Role must be of format 'arn:aws:iam::{account}:role/{role-name}' .`;
+    }
     if (roleCtrl.hasError('notValidRole')) {
       return $localize`Invalid IAM Role input, you are unable to assume this role! Please enter a valid role to assume.`;
     }
@@ -58,8 +55,12 @@ export class FormIamRoleComponent implements OnInit {
     // Make sure that the IAM Role is valid for the current user
     return (control: AbstractControl): { [key: string]: any } => {
       const role = this.parentForm.get('iamRole').value;
-      if (role == 'dummy') {
+      const pattern = new RegExp(/^arn:aws:iam::\d{12}:role\/[A-Za-z0-9]+(?:-[A-Za-z0-9]+)+$/);
+      if (! pattern.test(role)) {
         // do validation here to call oidc and confirm we can pass this role
+        return { notValidRegex: true };
+      }
+      else if (role == 'dummy') {
         return { notValidRole: true };
       }
       return null;
