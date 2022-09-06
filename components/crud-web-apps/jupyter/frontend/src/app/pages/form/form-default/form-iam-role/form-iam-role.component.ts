@@ -3,6 +3,7 @@ import {
   FormGroup,
   ValidatorFn,
   AbstractControl,
+  Validators,
 } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { JWABackendService } from 'src/app/services/backend.service';
@@ -15,12 +16,9 @@ import { NamespaceService } from 'kubeflow';
 })
 export class FormIamRoleComponent implements OnInit {
   @Input() parentForm: FormGroup;
-  @Input() services: string[];
+  @Input() iamRole: string[];
 
-  public ownedServices = new Set<string>();
-  public serviceSelection: string;
   public isOnboardingNamespace: boolean;
-  public hasIamRoles: boolean;
 
   subscriptions = new Subscription();
 
@@ -33,7 +31,10 @@ export class FormIamRoleComponent implements OnInit {
     // select the available zodiac service
     this.parentForm
       .get('iamRole')
-      .setValidators([this.iamRoleValidator()]);
+      .setValidators([ 
+        Validators.pattern('^arn:aws:iam::\d{12}:role\/[A-Za-z0-9]+(?:-[A-Za-z0-9]+)+$'),
+        this.iamRoleValidator(),
+      ]);
 
     // check if this namespace was created by aip-onboarding-service
     const curNamespace = this.namespaceService.getSelectedNamespace().subscribe(namespace => {

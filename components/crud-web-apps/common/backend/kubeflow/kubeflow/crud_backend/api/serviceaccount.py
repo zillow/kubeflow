@@ -23,6 +23,7 @@ def create_serviceaccount(namespace: str, name: str, iam_role: str):
         log.info(f'Successfully created ServiceAccount {name}')
     except client.rest.ApiException as e:
         log.error(f'Exception when calling CoreV1Api->create_namespaced_service_account: {e}\n')
+        raise (e)
 
 
 # kubernetes client does not have a get_namespaced_service_account function, have to use list

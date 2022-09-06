@@ -30,6 +30,7 @@ def create_rolebinding(namespace: str, name: str):
         log.info(f'Successfully created RoleBinding {name}')
     except client.rest.ApiException as e:
         log.error(f'Exception when calling CoreV1Api->create_namespaced_role_binding: {e}\n')
+        raise (e)
 
 
 def get_rolebinding(namespace: str, name: str) -> client.V1RoleBinding:

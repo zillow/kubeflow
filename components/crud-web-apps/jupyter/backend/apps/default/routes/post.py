@@ -1,7 +1,8 @@
-from flask import request
 import yaml
 import json
 
+from flask import request
+from kubernetes import client
 from kubeflow.kubeflow.crud_backend import api, decorators, helpers, logging
 
 from ...common import form, utils, volumes
@@ -78,8 +79,14 @@ def post_pvc(namespace):
     if sa_rb_resource_name:
         iam_role = form.get_form_value(body, defaults, "iamRole")
         # create the serviceaccount and rolebinding
-        api.create_serviceaccount(namespace, sa_rb_resource_name, iam_role)
-        api.create_rolebinding(namespace, sa_rb_resource_name)
+        try:
+            api.create_serviceaccount(namespace, sa_rb_resource_name, iam_role)
+            api.create_rolebinding(namespace, sa_rb_resource_name)
+        except client.rest.ApiException as e:
+            # return failure so NB does not get created.
+            msg = utils.parse_error_message(e)
+            return api.failed_response(msg, e.status)
+
         # set the ServiceAccount env variable for workflow sdk to pickup
         body["environment"]["METAFLOW_KUBERNETES_SERVICE_ACCOUNT"] = sa_rb_resource_name
 
