@@ -359,7 +359,7 @@ def create_notebook_service_account(notebook, body, defaults) -> str:
     role_name = iam_role.split("role/")[1]
     # create a hash to support multiple NBs in same NS using same IAM role.
     hash = random.getrandbits(32)
-    sa_rb_resource_name = f"notebook_{role_name}_{hash}"
+    sa_rb_resource_name = f"notebook-{role_name}-{hash}"
     log.info(f"Setting notebook {notebook['metadata']['name']} ServiceAccount {sa_rb_resource_name} from IAM role {iam_role}")
     notebook["spec"]["template"]["spec"]["serviceAccountName"] = sa_rb_resource_name
     return sa_rb_resource_name

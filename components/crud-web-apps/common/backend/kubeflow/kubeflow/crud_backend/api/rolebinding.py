@@ -43,4 +43,4 @@ def patch_rolebinding(namespace: str, name: str, rb: client.V1RoleBinding):
     try:
         rbac_client.patch_namespaced_role_binding(name, namespace, rb)
     except client.rest.ApiException as e:
-        log.error(f'Exception when calling CoreV1Api->create_namespaced_role_binding: {e}\n')
+        log.error(f'Exception when calling CoreV1Api->patch_namespaced_role_binding: {e}\n')

@@ -138,7 +138,7 @@ export class FormDefaultComponent implements OnInit, OnDestroy {
       this.iamRole = notebook.iamRole;
       this.envJSON["NOTEBOOK_IAM_ROLE"] = this.iamRole;
     }
-    console.log(this.envJSON);
+    // set the notebook obj environment var for the backend to process
     notebook.environment = this.envJSON;
 
     // Ensure CPU input is a string
