@@ -46,9 +46,6 @@ export class FormIamRoleComponent implements OnInit {
     if (roleCtrl.hasError('notValidRegex')) {
       return $localize`IAM Role must be of format 'arn:aws:iam::{account}:role/{role-name}' .`;
     }
-    if (roleCtrl.hasError('notValidRole')) {
-      return $localize`Invalid IAM Role input, you are unable to assume this role! Please enter a valid role to assume.`;
-    }
   }
 
   private iamRoleValidator(): ValidatorFn {
@@ -59,9 +56,6 @@ export class FormIamRoleComponent implements OnInit {
       if (! pattern.test(role)) {
         // do validation here to call oidc and confirm we can pass this role
         return { notValidRegex: true };
-      }
-      else if (role == 'dummy') {
-        return { notValidRole: true };
       }
       return null;
     };
