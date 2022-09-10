@@ -53,6 +53,9 @@ export class FormIamRoleComponent implements OnInit {
     return (control: AbstractControl): { [key: string]: any } => {
       const role = this.parentForm.get('iamRole').value;
       const pattern = new RegExp(/^arn:aws:iam::\d{12}:role\/[A-Za-z0-9]+(?:-[A-Za-z0-9]+)+$/);
+      if (role === '') {
+        return null;
+      }
       if (! pattern.test(role)) {
         // do validation here to call oidc and confirm we can pass this role
         return { notValidRegex: true };
