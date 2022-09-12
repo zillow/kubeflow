@@ -92,8 +92,18 @@ def post_pvc(namespace):
 
     form.set_notebook_environment(notebook, body, defaults)
 
-    log.info("Creating Notebook: %s", notebook)
-    notebook = api.create_notebook(notebook, namespace)
+    # TODO AIP-6638, look into refactoring this code to apply owner references to the 
+    # created SA and RB from the owning notebook via server-side apply when it gets supported
+    # by the python kubernetes client. https://github.com/kubernetes-client/python/issues/1430
+    try:
+        log.info("Creating Notebook: %s", notebook)
+        notebook = api.create_notebook(notebook, namespace)
+    except client.rest.ApiException as e:
+        msg = utils.parse_error_message(e)
+        if sa_rb_resource_name:
+            api.delete_rolebinding(namespace, sa_rb_resource_name)
+            api.delete_serviceaccount(namespace, sa_rb_resource_name)
+        return api.failed_response(msg, e.status)
 
     if sa_rb_resource_name:
         # add ownerReferences to the ServiceAccount

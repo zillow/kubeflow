@@ -29,7 +29,7 @@ def create_rolebinding(namespace: str, name: str):
         rbac_client.create_namespaced_role_binding(namespace, body)
         log.info(f'Successfully created RoleBinding {name}')
     except client.rest.ApiException as e:
-        log.error(f'Exception when calling CoreV1Api->create_namespaced_role_binding: {e}\n')
+        log.error(f'Exception when calling RbacAuthorizationV1Api->create_namespaced_role_binding: {e}\n')
         raise (e)
 
 
@@ -44,4 +44,11 @@ def patch_rolebinding(namespace: str, name: str, rb: client.V1RoleBinding):
     try:
         rbac_client.patch_namespaced_role_binding(name, namespace, rb)
     except client.rest.ApiException as e:
-        log.error(f'Exception when calling CoreV1Api->patch_namespaced_role_binding: {e}\n')
+        log.error(f'Exception when calling RbacAuthorizationV1Api->patch_namespaced_role_binding: {e}\n')
+
+
+def delete_rolebinding(namespace: str, name: str):
+    try:
+        rbac_client.delete_namespaced_role_binding(name, namespace)
+    except client.rest.ApiException as e:
+        log.error(f'Exception when calling RbacAuthorizationV1Api->delete_namespaced_role_binding: {e}\n')
