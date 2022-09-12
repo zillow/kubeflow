@@ -51,7 +51,7 @@ export class FormIamRoleComponent implements OnInit {
   private iamRoleValidator(): ValidatorFn {
     // Make sure that the IAM Role is valid for the current user
     return (control: AbstractControl): { [key: string]: any } => {
-      const role = this.parentForm.get('iamRole').value;
+      const role = this.parentForm.get('iamRole').value.trim();
       const pattern = new RegExp(/^arn:aws:iam::\d{12}:role\/[A-Za-z0-9]+(?:-[A-Za-z0-9]+)+$/);
       if (role === '') {
         return null;

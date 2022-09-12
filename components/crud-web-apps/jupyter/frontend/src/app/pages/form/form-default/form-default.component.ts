@@ -135,7 +135,7 @@ export class FormDefaultComponent implements OnInit, OnDestroy {
 
     if (notebook.iamRole) {
       // Add in notebook specific IamRole env variable for individual profiles.
-      this.iamRole = notebook.iamRole;
+      this.iamRole = notebook.iamRole.trim();
       this.envJSON["NOTEBOOK_IAM_ROLE"] = this.iamRole;
     }
     // set the notebook obj environment var for the backend to process
