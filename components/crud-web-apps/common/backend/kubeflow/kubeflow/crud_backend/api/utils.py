@@ -48,3 +48,16 @@ def deserialize(json_obj, klass):
 def serialize(obj):
     """Convert a K8s library object to JSON."""
     return client.ApiClient().sanitize_for_serialization(obj)
+
+
+def add_owner_reference(dependent, owner):
+    owner_reference = client.V1ObjectReference(
+        api_version=owner["apiVersion"],
+        kind=owner["kind"],
+        name=owner["metadata"]["name"],
+        uid=owner["metadata"]["uid"],
+    )
+
+    if not dependent.metadata.owner_references:
+        dependent.metadata.owner_references = []
+    dependent.metadata.owner_references.append(owner_reference)

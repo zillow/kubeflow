@@ -1,7 +1,8 @@
-from flask import request
 import yaml
 import json
 
+from flask import request
+from kubernetes import client
 from kubeflow.kubeflow.crud_backend import api, decorators, helpers, logging
 
 from ...common import form, utils, volumes
@@ -34,7 +35,6 @@ def post_pvc(namespace):
     form.set_notebook_storage(notebook, body, defaults)
     form.set_notebook_gpus(notebook, body, defaults)
     form.set_notebook_tolerations(notebook, body, defaults)
-    form.set_notebook_environment(notebook, body, defaults)
     form.set_notebook_affinity(notebook, body, defaults)
     form.set_notebook_configurations(notebook, body, defaults)
     form.set_notebook_culling_annotation(notebook, body, defaults)
@@ -75,8 +75,45 @@ def post_pvc(namespace):
         notebook = volumes.add_notebook_volume(notebook, v1_volume)
         notebook = volumes.add_notebook_container_mount(notebook, mount)
     '''
-    log.info("Creating Notebook: %s", notebook)
-    api.create_notebook(notebook, namespace)
+    sa_rb_resource_name = form.create_notebook_service_account(notebook, body, defaults)
+    if sa_rb_resource_name:
+        iam_role = form.get_form_value(body, defaults, "iamRole")
+        # create the serviceaccount and rolebinding
+        try:
+            api.create_serviceaccount(namespace, sa_rb_resource_name, iam_role)
+            api.create_rolebinding(namespace, sa_rb_resource_name)
+        except client.rest.ApiException as e:
+            # return failure so NB does not get created.
+            msg = utils.parse_error_message(e)
+            return api.failed_response(msg, e.status)
+
+        # set the ServiceAccount env variable for workflow sdk to pickup
+        body["environment"]["METAFLOW_KUBERNETES_SERVICE_ACCOUNT"] = sa_rb_resource_name
+
+    form.set_notebook_environment(notebook, body, defaults)
+
+    # TODO AIP-6638, look into refactoring this code to apply owner references to the 
+    # created SA and RB from the owning notebook via server-side apply when it gets supported
+    # by the python kubernetes client. https://github.com/kubernetes-client/python/issues/1430
+    try:
+        log.info("Creating Notebook: %s", notebook)
+        notebook = api.create_notebook(notebook, namespace)
+    except client.rest.ApiException as e:
+        msg = utils.parse_error_message(e)
+        if sa_rb_resource_name:
+            api.delete_rolebinding(namespace, sa_rb_resource_name)
+            api.delete_serviceaccount(namespace, sa_rb_resource_name)
+        return api.failed_response(msg, e.status)
+
+    if sa_rb_resource_name:
+        # add ownerReferences to the ServiceAccount
+        serviceaccount = api.get_serviceaccount(namespace, sa_rb_resource_name)
+        api.add_owner_reference(serviceaccount, notebook)
+        api.patch_serviceaccount(namespace, sa_rb_resource_name, serviceaccount)
+        # add ownerReferences to the RoleBinding
+        rolebinding = api.get_rolebinding(namespace, sa_rb_resource_name)
+        api.add_owner_reference(rolebinding, notebook)
+        api.patch_rolebinding(namespace, sa_rb_resource_name, rolebinding)
 
     return api.success_response("message", "Notebook created successfully.")
 

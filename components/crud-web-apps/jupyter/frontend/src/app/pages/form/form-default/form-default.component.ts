@@ -27,6 +27,7 @@ export class FormDefaultComponent implements OnInit, OnDestroy {
   formCtrl: FormGroup;
   config: Config;
   zodiacService = '';
+  envJSON = {};
 
   ephemeral = false;
   defaultStorageclass = false;
@@ -121,19 +122,23 @@ export class FormDefaultComponent implements OnInit, OnDestroy {
       notebook.cullIdleTime = notebook.cullIdleTime.toString()
     }
 
-    // delete temp zodiac field as this is not needed for backend notebook creation
     if (notebook.zodiacService) {
       this.zodiacService = notebook.zodiacService;
       // split zodiac service and team from backend as they are returned as a string in the
-      // form 'service:team' and set as notebook environment variable. 
-      notebook.environment = JSON.stringify(
-        {
-          "ZODIAC_SERVICE": this.zodiacService.split(":")[0],
-          "ZODIAC_TEAM": this.zodiacService.split(":")[1]
-        }
-      );
+      // form 'service:team' and set as notebook environment variable.
+      this.envJSON["ZODIAC_SERVICE"] = this.zodiacService.split(":")[0];
+      this.envJSON["ZODIAC_TEAM"] = this.zodiacService.split(":")[1];
     }
+    // delete temp zodiac field as this is not needed for backend notebook creation
     delete notebook.zodiacService;
+
+    if (notebook.iamRole) {
+      // Add in notebook specific IamRole env variable for individual profiles.
+      notebook.iamRole = notebook.iamRole.trim();
+      this.envJSON["NOTEBOOK_IAM_ROLE"] = notebook.iamRole;
+    }
+    // set the notebook obj environment var for the backend to process
+    notebook.environment = this.envJSON;
 
     // Ensure CPU input is a string
     if (typeof notebook.cpu === 'number') {

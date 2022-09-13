@@ -11,6 +11,8 @@ def list_poddefaults(namespace):
 
 
 def post_all_poddefault(namespace, body):
+    authz.ensure_authorized("create", "kubeflow.org", "v1alpha1", "poddefaults",
+                            namespace)
     try:
         response = custom_api.create_namespaced_custom_object("kubeflow.org", "v1alpha1",
                                                     namespace, "poddefaults", body)
@@ -23,6 +25,8 @@ def post_all_poddefault(namespace, body):
 
 
 def patch_zodiac_service(namespace, body):
+    authz.ensure_authorized("patch", "kubeflow.org", "v1alpha1", "poddefaults",
+                            namespace)
     poddefault_name = "all-pod-default"
     return custom_api.patch_namespaced_custom_object("kubeflow.org", "v1alpha1",
                                                     namespace, "poddefaults", poddefault_name, body)

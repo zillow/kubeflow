@@ -1,4 +1,5 @@
 import json
+import random
 
 from werkzeug.exceptions import BadRequest
 
@@ -326,15 +327,9 @@ def set_notebook_shm(notebook, body, defaults):
 
 def set_notebook_environment(notebook, body, defaults):
     env = get_form_value(body, defaults, "environment", optional=True)
-    # We do nothing and return here if the Notebook object does not have environment
-    # variables to add to the k8s Notebook CRD. We do this to account for AIP project namespace
-    # notebooks which will not have Zodiac environment variables. Only individual profile 
-    # notebooks will have environment variables to parse.
-    if env is None:
-        return
 
     # FIXME: Validate the environment?
-    env = json.loads(env) if env else {}
+    env = env if env else {}
     env = [{"name": name, "value": str(value)} for name, value in env.items()]
     notebook["spec"]["template"]["spec"]["containers"][0]["env"] += env
 
@@ -346,6 +341,22 @@ def set_notebook_culling_annotation(notebook, body, defaults):
 
     log.info(f"Setting notebook {notebook['metadata']['name']} annotation aip.zillowgroup.net/cull-idle-time={annotation_value}")
     notebook["metadata"]["annotations"]["aip.zillowgroup.net/cull-idle-time"] = annotation_value
+
+
+def create_notebook_service_account(notebook, body, defaults) -> str:
+    """ Returns the service account name generated from the given IAM role.
+    """
+    iam_role = get_form_value(body, defaults, "iamRole")
+    if not iam_role:
+        return None
+
+    role_name = iam_role.split("role/")[1]
+    # create a hash to support multiple NBs in same NS using same IAM role.
+    hash = random.getrandbits(32)
+    sa_rb_resource_name = f"notebook-{role_name}-{hash}"
+    log.info(f"Setting notebook {notebook['metadata']['name']} ServiceAccount {sa_rb_resource_name} from IAM role {iam_role}")
+    notebook["spec"]["template"]["spec"]["serviceAccountName"] = sa_rb_resource_name
+    return sa_rb_resource_name
 
 
 # Volume add functions
