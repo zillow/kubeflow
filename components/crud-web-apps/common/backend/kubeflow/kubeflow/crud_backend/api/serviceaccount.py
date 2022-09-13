@@ -45,7 +45,7 @@ def patch_serviceaccount(namespace: str, name: str, sa: client.V1ServiceAccount)
         print(f'Exception when calling CoreV1Api->patch_namespaced_service_account: {e}\n')
 
 
-def patch_serviceaccount(namespace: str, name: str):
+def delete_serviceaccount(namespace: str, name: str):
     authz.ensure_authorized("delete", "", "v1", "serviceaccounts", namespace)
     try:
         v1_core.delete_namespaced_service_account(name, namespace)
