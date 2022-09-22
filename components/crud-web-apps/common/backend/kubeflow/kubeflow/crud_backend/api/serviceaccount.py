@@ -7,7 +7,7 @@ from kubeflow.kubeflow.crud_backend import logging
 log = logging.getLogger(__name__)
 
 
-def create_serviceaccount(namespace: str, name: str, iam_role: str):
+def create_serviceaccount(namespace: str, name: str, iam_role: str, owner_reference=None):
     authz.ensure_authorized("create", "", "v1", "serviceaccounts", namespace)
     body = client.V1ServiceAccount(
         metadata=client.V1ObjectMeta(
@@ -16,6 +16,7 @@ def create_serviceaccount(namespace: str, name: str, iam_role: str):
                 "eks.amazonaws.com/role-arn": iam_role, 
                 "eks.amazonaws.com/sts-regional-endpoints": "true",
             },
+            owner_references = [owner_reference],
         )
     )
     try:

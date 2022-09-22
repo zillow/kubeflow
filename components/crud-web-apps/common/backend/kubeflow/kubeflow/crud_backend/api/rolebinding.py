@@ -7,10 +7,11 @@ from kubeflow.kubeflow.crud_backend import logging
 log = logging.getLogger(__name__)
 
 
-def create_rolebinding(namespace: str, name: str):
+def create_rolebinding(namespace: str, name: str, owner_reference=None):
     body = client.V1RoleBinding(
         metadata=client.V1ObjectMeta(
             name=name,
+            owner_references = [owner_reference],
         ),
         role_ref=client.V1RoleRef(
             api_group="rbac.authorization.k8s.io",
