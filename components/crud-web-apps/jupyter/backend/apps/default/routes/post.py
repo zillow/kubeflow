@@ -85,8 +85,12 @@ def post_pvc(namespace):
     # TODO AIP-6638, look into refactoring this code to apply owner references to the 
     # created SA and RB from the owning notebook via server-side apply when it gets supported
     # by the python kubernetes client. https://github.com/kubernetes-client/python/issues/1430
-    log.info("Creating Notebook: %s", notebook)
-    notebook = api.create_notebook(notebook, namespace)
+    try:
+        log.info("Creating Notebook: %s", notebook)
+        notebook = api.create_notebook(notebook, namespace)
+    except client.rest.ApiException as e:
+        msg = utils.parse_error_message(e)
+        return api.failed_response(msg, e.status)
 
     # ensure the SA and RB we create gets created appropriately, if not ensure the notebook
     # does not get create and return the error message back to the UI.
