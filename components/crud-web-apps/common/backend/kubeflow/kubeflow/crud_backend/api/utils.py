@@ -50,14 +50,10 @@ def serialize(obj):
     return client.ApiClient().sanitize_for_serialization(obj)
 
 
-def add_owner_reference(dependent, owner):
-    owner_reference = client.V1ObjectReference(
+def get_owner_reference(owner) -> client.V1OwnerReference:
+    return client.V1OwnerReference(
         api_version=owner["apiVersion"],
         kind=owner["kind"],
         name=owner["metadata"]["name"],
         uid=owner["metadata"]["uid"],
     )
-
-    if not dependent.metadata.owner_references:
-        dependent.metadata.owner_references = []
-    dependent.metadata.owner_references.append(owner_reference)
