@@ -18,11 +18,21 @@ export class FormGpusComponent implements OnInit {
 
   subscriptions = new Subscription();
   maxGPUs = 16;
-  gpusCount = ['1', '2', '4', '8'];
+  cpuLimitP2 = 4;
+  cpuLimitP3 = 8;
+  memoryLimitP2 = 61;
+  memoryLimitP3 = 61;
+  storageLimit = 24;
+  gpusCountP2 = ['1', '2', '4', '8'];
+  gpusCountP3 = ['1', '2', '4'];
 
   constructor(public backend: JWABackendService) {}
 
   ngOnInit() {
+    //disable gpu.num and gpu.vendor by default
+    // this.parentForm.get('gpus').get('num').disable()
+    // this.parentForm.get('gpus').get('vendor').disable()
+
     this.gpuCtrl = this.parentForm.get('gpus') as FormGroup;
 
     // Vendor should not be empty if the user selects GPUs num
@@ -43,6 +53,20 @@ export class FormGpusComponent implements OnInit {
 
     this.backend.getGPUVendors().subscribe(vendors => {
       this.installedVendors = new Set(vendors);
+    });
+
+    this.parentForm.get('gpus').get('num').valueChanges.subscribe(val => {
+      const nodetype = this.parentForm.get('affinityConfig').value;
+      if (nodetype =='p2'){
+        this.parentForm.get('cpu').setValue(val*this.cpuLimitP2);
+        this.parentForm.get('memory').setValue(val*this.memoryLimitP2);
+        this.parentForm.get('storage').setValue(this.storageLimit);
+      }
+      if (nodetype =='p3'){
+        this.parentForm.get('cpu').setValue(val*this.cpuLimitP3);
+        this.parentForm.get('memory').setValue(val*this.memoryLimitP3);
+        this.parentForm.get('storage').setValue(this.storageLimit);
+      }
     });
   }
 

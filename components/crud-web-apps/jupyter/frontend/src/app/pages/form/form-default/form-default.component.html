@@ -28,6 +28,17 @@
         [hideTag]="config?.hideTag"
       ></app-form-image>
 
+      <app-form-affinity-tolerations
+        [parentForm]="formCtrl"
+        [affinityConfigs]="config?.affinityConfig?.options"
+        [tolerationGroups]="config?.tolerationGroup?.options"
+      ></app-form-affinity-tolerations>
+
+      <app-form-gpus
+        [parentForm]="formCtrl"
+        [vendors]="config?.gpus?.value.vendors"
+      ></app-form-gpus>
+
       <app-form-cpu-ram
       [parentForm]="formCtrl"
       [readonlyCPU]="config?.cpu?.readOnly"
@@ -37,11 +48,6 @@
       [memoryLimitFactor]="config?.memory?.limitFactor"
       [storageLimitFactor]="config?.storage?.limitFactor"
       ></app-form-cpu-ram>
-
-      <app-form-gpus
-        [parentForm]="formCtrl"
-        [vendors]="config?.gpus?.value.vendors"
-      ></app-form-gpus>
 
       <app-form-workspace-volume
         *ngIf="formCtrl.get('workspace')"
@@ -61,12 +67,6 @@
       <app-form-configurations
         [parentForm]="formCtrl"
       ></app-form-configurations>
-
-      <app-form-affinity-tolerations
-        [parentForm]="formCtrl"
-        [affinityConfigs]="config?.affinityConfig?.options"
-        [tolerationGroups]="config?.tolerationGroup?.options"
-      ></app-form-affinity-tolerations>
 
       <app-form-cull-idle-time
         [parentForm]="formCtrl"

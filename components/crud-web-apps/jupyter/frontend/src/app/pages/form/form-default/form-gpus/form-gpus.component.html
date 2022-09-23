@@ -5,13 +5,16 @@
       <mat-label i18n>Number of GPUs</mat-label>
       <mat-select matNativeControl formControlName="num">
         <mat-option value="" i18n="option None" selected>None</mat-option>
-        <mat-option 
-          *ngFor="let v of gpusCount"
-          [value]="v"
-          [matTooltip]="countTooltip()"
-          >
-          {{ v }}
-        </mat-option>
+        <ng-container *ngIf="parentForm.get('affinityConfig').value == 'p2'">
+          <mat-option *ngFor="let v of gpusCountP2" [value]="v" [matTooltip]="countTooltip()">
+            {{ v }}
+          </mat-option>
+        </ng-container>
+        <ng-container *ngIf="parentForm.get('affinityConfig').value == 'p3'">
+          <mat-option *ngFor="let v of gpusCountP3" [value]="v" [matTooltip]="countTooltip()">
+            {{ v }}
+          </mat-option>
+        </ng-container>
       </mat-select>
     </mat-form-field>
 
@@ -19,11 +22,7 @@
     <mat-form-field class="column" appearance="outline">
       <mat-label i18n>GPU Vendor</mat-label>
       <mat-select matNativeControl formControlName="vendor" id="gpu-vendor">
-        <mat-option
-          *ngFor="let v of vendors"
-          [value]="v.limitsKey"
-          [matTooltip]="vendorTooltip(v)"
-        >
+        <mat-option *ngFor="let v of vendors" [value]="v.limitsKey" [matTooltip]="vendorTooltip(v)">
           {{ v.uiName }}
         </mat-option>
       </mat-select>
