@@ -114,30 +114,6 @@ export class JWABackendService extends BackendService {
     );
   }
 
-  /** We genereate the poddefault in JWA in order to prevent writing over the resource file 
-   *  everytime we deploy the profile repo. This will ensure there is no gap in zodiac metadata
-   *  in the poddefault.
-   * 
-   *  TODO: AIP-6339 Remove this logic once zodiac srvice en variables are picked up by workflow
-   *  sdk and we no longer have a need to generate poddefualt in JWA.
-  */
-  public createAllPodDefault(namespace: string, service_team: string): Observable<string> {
-    const payload = {
-      'service': service_team.split(":")[0], 
-      'team': service_team.split(":")[1]
-    };
-    // Get owned zodiac services by namespace
-    const url = `api/namespaces/${namespace}/allpoddefault`;
-    console.log(`Sending request to ${namespace}, creating all-pod-default. ${payload}`)
-
-    return this.http.post<JWABackendResponse>(url, payload).pipe(
-      catchError(error => this.handleError(error)),
-      map(_ => {
-        return 'poddefault posted';
-      }),
-    );
-  }
-
   // PATCH
   public startNotebook(notebook: NotebookProcessedObject): Observable<string> {
     const name = notebook.name;

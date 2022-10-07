@@ -82,7 +82,7 @@ def set_notebook_image(notebook, body, defaults):
     if is_custom_image:
         image_body_field = "customImage"
 
-    image = get_form_value(body, defaults, image_body_field, "image")
+    image = get_form_value(body, defaults, image_body_field, "image").strip()
     notebook["spec"]["template"]["spec"]["containers"][0]["image"] = image
 
 
@@ -309,6 +309,12 @@ def set_notebook_configurations(notebook, body, defaults):
     # the value of label cannot contain '@'. username contains "@zillowgroup.com"
     notebook_labels["user-pod-default"] = authn.get_username().split("@")[0]
 
+    # set zodiac labels for cost attribution and logging topic annotation.
+    # removed from poddefaults.
+    service_team = get_form_value(body, defaults, "zodiacService", optional=True)
+    if service_team:
+        notebook_labels["zodiac.zillowgroup.net/service"] = service_team.split(":")[0]
+        notebook_labels["zodiac.zillowgroup.net/team"] = service_team.split(":")[1]
 
 def set_notebook_shm(notebook, body, defaults):
     shm = get_form_value(body, defaults, "shm")
@@ -346,7 +352,7 @@ def set_notebook_culling_annotation(notebook, body, defaults):
 def create_notebook_service_account(notebook, body, defaults) -> str:
     """ Returns the service account name generated from the given IAM role.
     """
-    iam_role = get_form_value(body, defaults, "iamRole")
+    iam_role = get_form_value(body, defaults, "iamRole", optional=True)
     if not iam_role:
         return None
 

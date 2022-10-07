@@ -104,7 +104,7 @@ export class FormDefaultComponent implements OnInit, OnDestroy {
 
     // Use the custom image instead
     if (notebook.customImageCheck) {
-      notebook.image = notebook.customImage;
+      notebook.image = notebook.customImage.trim();
     } else if (notebook.serverType === 'group-one') {
       // Set notebook image from imageGroupOne
       notebook.image = notebook.imageGroupOne;
@@ -128,9 +128,11 @@ export class FormDefaultComponent implements OnInit, OnDestroy {
       // form 'service:team' and set as notebook environment variable.
       this.envJSON["ZODIAC_SERVICE"] = this.zodiacService.split(":")[0];
       this.envJSON["ZODIAC_TEAM"] = this.zodiacService.split(":")[1];
+      // add env variable to identify notebook as existing in an individual namespace.
+      // selecting a zodiac service is always required for creating a notebook in an
+      // individual namespace.
+      this.envJSON["INDIVIDUAL_NAMESPACE"] = "true";
     }
-    // delete temp zodiac field as this is not needed for backend notebook creation
-    delete notebook.zodiacService;
 
     if (notebook.iamRole) {
       // Add in notebook specific IamRole env variable for individual profiles.
@@ -199,14 +201,6 @@ export class FormDefaultComponent implements OnInit, OnDestroy {
   onSubmit() {
     this.popup.open('Submitting new Notebook...', SnackType.Info, 3000);
     const notebook = this.getSubmitNotebook();
-
-    // logic for adding zodiac information to poddefaults only for contributor profiles 
-    // TODO: AIP-6339. remove this logic once workflow sdk can pick up environment variables.
-    if (this.zodiacService) {
-      this.backend.createAllPodDefault(notebook.namespace, this.zodiacService).subscribe(() => {
-        // do nothing
-      });
-    }
 
     this.backend.createNotebook(notebook).subscribe(() => {
       this.popup.close();

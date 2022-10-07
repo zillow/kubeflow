@@ -17,10 +17,6 @@ NOTEBOOK_TEMPLATE_YAML = os.path.join(
     FILE_ABS_PATH, "yaml/notebook_template.yaml"
 )
 
-ALLPODDEFAULT_TEMPLATE_YAML = os.path.join(
-    FILE_ABS_PATH, "yaml/all-pod-default.yaml"
-)
-
 # The production configuration is mounted on the app's pod via a configmap
 DEV_CONFIG = os.path.join(FILE_ABS_PATH, "yaml/spawner_ui_config.yaml")
 CONFIGS = [
