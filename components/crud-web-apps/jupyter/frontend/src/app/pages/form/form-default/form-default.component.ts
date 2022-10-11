@@ -126,8 +126,12 @@ export class FormDefaultComponent implements OnInit, OnDestroy {
       this.zodiacService = notebook.zodiacService;
       // split zodiac service and team from backend as they are returned as a string in the
       // form 'service:team' and set as notebook environment variable.
-      this.envJSON["ZODIAC_SERVICE"] = this.zodiacService.split(":")[0];
+      const service = this.zodiacService.split(":")[0];
+      this.envJSON["ZODIAC_SERVICE"] = service;
       this.envJSON["ZODIAC_TEAM"] = this.zodiacService.split(":")[1];
+      // individual profiles need this datastore set separately as it is a particular zodiac service.
+      this.envJSON["METAFLOW_DATASTORE_SYSROOT_S3"] = 
+        `s3://serve-datalake-zillowgroup/zillow/workflow_sdk/metaflow_28d/dev/aip-contributors-datalake-access/${service}`;
       // add env variable to identify notebook as existing in an individual namespace.
       // selecting a zodiac service is always required for creating a notebook in an
       // individual namespace.
