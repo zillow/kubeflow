@@ -21,7 +21,7 @@ import { FormZodiacServiceComponent } from './form-zodiac-service/form-zodiac-se
   styleUrls: ['./form-default.component.scss'],
 })
 export class FormDefaultComponent implements OnInit, OnDestroy {
-  @ViewChild(FormZodiacServiceComponent) formZodiacServiceComponent:FormZodiacServiceComponent
+  @ViewChild(FormZodiacServiceComponent) formZodiacServiceComponent: FormZodiacServiceComponent
 
   currNamespace = '';
   formCtrl: FormGroup;
@@ -43,7 +43,7 @@ export class FormDefaultComponent implements OnInit, OnDestroy {
     public backend: JWABackendService,
     public router: Router,
     public popup: SnackBarService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // Initialize the form control
@@ -148,6 +148,14 @@ export class FormDefaultComponent implements OnInit, OnDestroy {
 
     // Ensure CPU input is a string
     if (typeof notebook.cpu === 'number') {
+      var cpuScaleDown = 1;
+      if (notebook.affinityConfig == 'general-purpose' || notebook.affinityConfig == 'p3') {
+        cpuScaleDown = 0.85;
+      }
+      if (notebook.affinityConfig == 'memory-optimized' || notebook.affinityConfig == 'p2') {
+        cpuScaleDown = 0.92;
+      }
+      notebook.cpu = Math.ceil(cpuScaleDown * notebook.cpu);
       notebook.cpu = notebook.cpu.toString();
     }
 
@@ -182,6 +190,14 @@ export class FormDefaultComponent implements OnInit, OnDestroy {
 
     // Add Gi to all sizes
     if (notebook.memory) {
+      var memScaleDown = 1;
+      if (notebook.affinityConfig == 'general-purpose' || notebook.affinityConfig == 'p3') {
+        memScaleDown = 0.85;
+      }
+      if (notebook.affinityConfig == 'memory-optimized' || notebook.affinityConfig == 'p2') {
+        memScaleDown = 0.92;
+      }
+      notebook.memory = Math.ceil(memScaleDown * notebook.memory);
       notebook.memory = notebook.memory.toString() + 'Gi';
     }
 

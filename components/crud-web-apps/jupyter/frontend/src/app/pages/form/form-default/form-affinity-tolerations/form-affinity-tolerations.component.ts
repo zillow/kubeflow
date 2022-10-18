@@ -22,7 +22,7 @@ export class FormAffinityTolerationsComponent implements OnInit {
       if (affinityConfig == 'p2' || affinityConfig == 'p3') {
         // alert('GPU selected');
         this.parentForm.get('tolerationGroup').setValue('GPU');
-        this.parentForm.get('gpus').get('num').setValue('');
+        this.parentForm.get('gpus').get('num').setValue('1');
         this.parentForm.get('gpus').get('vendor').setValue('nvidia.com/gpu');
       }
       // CPU selected
@@ -30,9 +30,15 @@ export class FormAffinityTolerationsComponent implements OnInit {
         this.parentForm.get('tolerationGroup').setValue('CPU');
         this.parentForm.get('gpus').get('num').setValue('');
         this.parentForm.get('gpus').get('vendor').setValue('');
-        this.parentForm.get('cpu').setValue('0.5');
-        this.parentForm.get('memory').setValue('1.0');
-        this.parentForm.get('storage').setValue('8');
+
+        if (affinityConfig == 'general-purpose') {
+          this.parentForm.get('cpu').setValue(1);
+          this.parentForm.get('memory').setValue('4');
+        }
+        if (affinityConfig == 'memory-optimized') {
+          this.parentForm.get('cpu').setValue(1);
+          this.parentForm.get('memory').setValue('8');
+        }
       }
     });
   }
