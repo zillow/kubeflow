@@ -16,7 +16,12 @@ export class FormCpuRamComponent implements OnInit {
   @Input() memoryLimitFactor: string;
   @Input() storageLimitFactor: string;
 
-  constructor() {}
+  cpusCountGP = [1, 2, 4, 8, 16, 32];  // cpus for general purpose affinity type
+  cpusCountMO = [1, 2, 4, 8, 24, 48];   // cpus for memory optimized affinity type
+  cpusCountP2 = [4, 8, 16, 32];
+  cpusCountP3 = [8, 16, 32];
+
+  constructor() { }
 
   ngOnInit() {
     this.parentForm.get('cpu').valueChanges.subscribe(val => {
@@ -29,6 +34,14 @@ export class FormCpuRamComponent implements OnInit {
       this.parentForm
         .get('cpuLimit')
         .setValue(calculateLimits(cpu, this.cpuLimitFactor));
+
+      const affinityConfig = this.parentForm.get('affinityConfig').value;
+      if (affinityConfig == 'general-purpose') {
+        this.parentForm.get('memory').setValue(val * 4);
+      }
+      if (affinityConfig == 'memory-optimized') {
+        this.parentForm.get('memory').setValue(val * 8);
+      }
     });
 
     this.parentForm.get('memory').valueChanges.subscribe(val => {
@@ -56,7 +69,7 @@ export class FormCpuRamComponent implements OnInit {
     });
   }
 
-  getCPUError() {}
+  getCPUError() { }
 
-  getRAMError() {}
+  getRAMError() { }
 }
