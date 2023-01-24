@@ -15,7 +15,7 @@ app-drawer-layout.flex(narrow='{{narrowMode}}',
         tail='{{subRouteData}}')
     app-drawer#MainDrawer(slot='drawer')
         figure.logo
-            |!{logo}
+            img(src=require('../assets/logo.png'))
         div.flex.scrollable
             a(href$='[[_buildHref("/", queryParams.*)]]', tabindex='-1')
                 paper-item.menu-item#home
