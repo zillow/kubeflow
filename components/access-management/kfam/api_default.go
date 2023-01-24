@@ -26,6 +26,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/runtime/serializer"
 	"k8s.io/client-go/informers"
+	"k8s.io/apimachinery/pkg/labels"
 	clientset "k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/kubernetes/scheme"
 	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
@@ -45,6 +46,7 @@ type KfamV1Alpha1Interface interface {
 type KfamV1Alpha1Client struct {
 	profileClient ProfileInterface
 	bindingClient BindingInterface
+	namespaceLister 
 	clusterAdmin  []string
 	userIdHeader  string
 	userIdPrefix  string
@@ -70,6 +72,7 @@ func NewKfamClient(userIdHeader string, userIdPrefix string, clusterAdmin string
 
 	informerFactory := informers.NewSharedInformerFactory(kubeClient, time.Minute*60)
 	roleBindingLister := informerFactory.Rbac().V1().RoleBindings().Lister()
+	namespaceLister := informerFactory.Core().V1().Namespaces().Lister()
 	stop := make(chan struct{})
 	informerFactory.Start(stop)
 	informerFactory.WaitForCacheSync(stop)
@@ -83,6 +86,7 @@ func NewKfamClient(userIdHeader string, userIdPrefix string, clusterAdmin string
 			kubeClient:        kubeClient,
 			roleBindingLister: roleBindingLister,
 		},
+		namespaceLister: namespaceLister,
 		clusterAdmin: []string{clusterAdmin},
 		userIdHeader: userIdHeader,
 		userIdPrefix: userIdPrefix,
@@ -219,15 +223,18 @@ func (c *KfamV1Alpha1Client) ReadBinding(w http.ResponseWriter, r *http.Request)
 		return
 	}
 	namespaces := []string{}
-	// by default scan all namespaces created by profile CR
+	// by default scan all namespaces created by the platform
 	if queries.Get("namespace") == "" {
-		profList, err := c.profileClient.List(metav1.ListOptions{})
+		// Forked from the original open source to remove the Profile concept as it adds little
+		// benefit to us.
+		namespaceSelector := "zodiac.zillowgroup.net/platform=ai-platform"
+		namespaceList, err := c.namespaceLister.List(labels.Parse(namespaceSelector))
 		if err != nil {
 			w.WriteHeader(http.StatusForbidden)
 			writeResponse(w, []byte(err.Error()))
 		}
-		for _, profile := range profList.Items {
-			namespaces = append(namespaces, profile.Name)
+		for _, namespace := range namespaceList.Items {
+			namespaces = append(namespaces, namespace.Name)
 		}
 	} else {
 		namespaces = append(namespaces, queries.Get("namespace"))
