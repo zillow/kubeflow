@@ -23,6 +23,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	istioRegister "istio.io/client-go/pkg/apis/security/v1beta1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	corev1 "k8s.io/client-go/listers/core/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/runtime/serializer"
 	"k8s.io/client-go/informers"
@@ -46,7 +47,7 @@ type KfamV1Alpha1Interface interface {
 type KfamV1Alpha1Client struct {
 	profileClient ProfileInterface
 	bindingClient BindingInterface
-	namespaceLister 
+	namespaceLister corev1.NamespaceLister
 	clusterAdmin  []string
 	userIdHeader  string
 	userIdPrefix  string
