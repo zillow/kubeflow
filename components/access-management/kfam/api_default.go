@@ -228,13 +228,13 @@ func (c *KfamV1Alpha1Client) ReadBinding(w http.ResponseWriter, r *http.Request)
 	if queries.Get("namespace") == "" {
 		// Forked from the original open source to remove the Profile concept as it adds little
 		// benefit to us.
-		namespaceSelector := "zodiac.zillowgroup.net/platform=ai-platform"
-		namespaceList, err := c.namespaceLister.List(labels.Parse(namespaceSelector))
+		namespaceSelector, _ := labels.Parse("zodiac.zillowgroup.net/platform=ai-platform")
+		namespaceList, err := c.namespaceLister.List(namespaceSelector)
 		if err != nil {
 			w.WriteHeader(http.StatusForbidden)
 			writeResponse(w, []byte(err.Error()))
 		}
-		for _, namespace := range namespaceList.Items {
+		for _, namespace := range namespaceList {
 			namespaces = append(namespaces, namespace.Name)
 		}
 	} else {
