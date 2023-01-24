@@ -28,7 +28,8 @@ import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
 
 import css from './main-page.css';
 import template from './main-page.pug';
-import logo from '../assets/logo.svg';
+// import logo from '../assets/logo.svg';
+import logo from '../assets/logo.png';
 
 import './registration-page.js';
 import './namespace-selector.js';
