@@ -23,9 +23,11 @@ import (
 	log "github.com/sirupsen/logrus"
 	istioRegister "istio.io/client-go/pkg/apis/security/v1beta1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	corev1 "k8s.io/client-go/listers/core/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/runtime/serializer"
 	"k8s.io/client-go/informers"
+	"k8s.io/apimachinery/pkg/labels"
 	clientset "k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/kubernetes/scheme"
 	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
@@ -45,6 +47,7 @@ type KfamV1Alpha1Interface interface {
 type KfamV1Alpha1Client struct {
 	profileClient ProfileInterface
 	bindingClient BindingInterface
+	namespaceLister corev1.NamespaceLister
 	clusterAdmin  []string
 	userIdHeader  string
 	userIdPrefix  string
@@ -70,6 +73,7 @@ func NewKfamClient(userIdHeader string, userIdPrefix string, clusterAdmin string
 
 	informerFactory := informers.NewSharedInformerFactory(kubeClient, time.Minute*60)
 	roleBindingLister := informerFactory.Rbac().V1().RoleBindings().Lister()
+	namespaceLister := informerFactory.Core().V1().Namespaces().Lister()
 	stop := make(chan struct{})
 	informerFactory.Start(stop)
 	informerFactory.WaitForCacheSync(stop)
@@ -83,6 +87,7 @@ func NewKfamClient(userIdHeader string, userIdPrefix string, clusterAdmin string
 			kubeClient:        kubeClient,
 			roleBindingLister: roleBindingLister,
 		},
+		namespaceLister: namespaceLister,
 		clusterAdmin: []string{clusterAdmin},
 		userIdHeader: userIdHeader,
 		userIdPrefix: userIdPrefix,
@@ -219,15 +224,19 @@ func (c *KfamV1Alpha1Client) ReadBinding(w http.ResponseWriter, r *http.Request)
 		return
 	}
 	namespaces := []string{}
-	// by default scan all namespaces created by profile CR
+	// by default scan all namespaces created by the platform
 	if queries.Get("namespace") == "" {
-		profList, err := c.profileClient.List(metav1.ListOptions{})
+		// TODO AIP-7049 Replace app.kubernetes.io/part-of=kubeflow-profile selector
+		// Forked from the original open source to remove the Profile concept as it adds little
+		// benefit to us.
+		namespaceSelector, _ := labels.Parse("app.kubernetes.io/part-of=kubeflow-profile")
+		namespaceList, err := c.namespaceLister.List(namespaceSelector)
 		if err != nil {
 			w.WriteHeader(http.StatusForbidden)
 			writeResponse(w, []byte(err.Error()))
 		}
-		for _, profile := range profList.Items {
-			namespaces = append(namespaces, profile.Name)
+		for _, namespace := range namespaceList {
+			namespaces = append(namespaces, namespace.Name)
 		}
 	} else {
 		namespaces = append(namespaces, queries.Get("namespace"))
