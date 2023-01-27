@@ -35,3 +35,10 @@ build:access-management-image:
     ARTIFACT_NAME: "access-management"
     CONTEXT: "components/access-management"
   stage: build:images
+
+build:centraldashboard-image:
+  extends: .build_templatized_docker_image
+  variables:
+    ARTIFACT_NAME: "centraldashboard"
+    CONTEXT: "components/centraldashboard"
+  stage: build:images
