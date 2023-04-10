@@ -182,10 +182,10 @@ export class WorkgroupApi {
             bindings.body.bindings || []
         );
         // Ensure we do not return duplicate namespaces.
-        const users: string[] = [];
+        const duplicateNamespaces: string[] = [];
         const distinctNamespaces = namespaces.reduce((acc, val) => {
-            if (users.indexOf(val.user) === -1) {
-                users.push(val.user);
+            if (duplicateNamespaces.indexOf(val.namespace) === -1) {
+                duplicateNamespaces.push(val.namespace);
                 return acc.concat([val]);
             }
             return acc;
