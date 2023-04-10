@@ -180,10 +180,19 @@ export class WorkgroupApi {
         ]);
         const namespaces = mapWorkgroupBindingToSimpleBinding(
             bindings.body.bindings || []
-        );
+        )
+        // Ensure we do not return duplicate namespaces.
+        const users: string[] = [];
+        const distinctNamespaces = namespaces.reduce((acc, val) => {
+            if (users.indexOf(val.user) === -1) {
+                users.push(val.user);
+                return acc.concat([val]);
+            }
+            return acc;
+        }, [] as SimpleBinding[]);
         return {
             isClusterAdmin: adminResponse.body,
-            namespaces,
+            namespaces: distinctNamespaces,
         };
     }
     async handleContributor(action: ContributorActions, req: Request, res: Response) {

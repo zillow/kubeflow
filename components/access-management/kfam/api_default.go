@@ -17,6 +17,7 @@ import (
 	"path"
 	"strconv"
 	"time"
+	"sort"
 
 	profileRegister "github.com/kubeflow/kubeflow/components/access-management/pkg/apis/kubeflow/v1beta1"
 	profilev1beta1 "github.com/kubeflow/kubeflow/components/profile-controller/api/v1beta1"
@@ -241,6 +242,7 @@ func (c *KfamV1Alpha1Client) ReadBinding(w http.ResponseWriter, r *http.Request)
 	} else {
 		namespaces = append(namespaces, queries.Get("namespace"))
 	}
+	sort.Strings(namespaces)
 	bindingList, err := c.bindingClient.List(queries.Get("user"), namespaces, queries.Get("role"))
 	if err != nil {
 		IncRequestErrorCounter(err.Error(), "", action, r.URL.Path,
