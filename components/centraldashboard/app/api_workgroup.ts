@@ -180,7 +180,7 @@ export class WorkgroupApi {
         ]);
         const namespaces = mapWorkgroupBindingToSimpleBinding(
             bindings.body.bindings || []
-        )
+        );
         // Ensure we do not return duplicate namespaces.
         const users: string[] = [];
         const distinctNamespaces = namespaces.reduce((acc, val) => {
