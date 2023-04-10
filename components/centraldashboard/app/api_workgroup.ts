@@ -181,9 +181,18 @@ export class WorkgroupApi {
         const namespaces = mapWorkgroupBindingToSimpleBinding(
             bindings.body.bindings || []
         );
+        // Ensure we do not return duplicate namespaces.
+        const duplicateNamespaces: string[] = [];
+        const distinctNamespaces = namespaces.reduce((acc, val) => {
+            if (duplicateNamespaces.indexOf(val.namespace) === -1) {
+                duplicateNamespaces.push(val.namespace);
+                return acc.concat([val]);
+            }
+            return acc;
+        }, [] as SimpleBinding[]);
         return {
             isClusterAdmin: adminResponse.body,
-            namespaces,
+            namespaces: distinctNamespaces,
         };
     }
     async handleContributor(action: ContributorActions, req: Request, res: Response) {
