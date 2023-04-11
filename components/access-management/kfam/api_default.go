@@ -227,10 +227,9 @@ func (c *KfamV1Alpha1Client) ReadBinding(w http.ResponseWriter, r *http.Request)
 	namespaces := []string{}
 	// by default scan all namespaces created by the platform
 	if queries.Get("namespace") == "" {
-		// TODO AIP-7049 Replace app.kubernetes.io/part-of=kubeflow-profile selector
 		// Forked from the original open source to remove the Profile concept as it adds little
 		// benefit to us.
-		namespaceSelector, _ := labels.Parse("app.kubernetes.io/part-of=kubeflow-profile")
+		namespaceSelector, _ := labels.Parse("zodiac.zillowgroup.net/platform=ai-platform")
 		namespaceList, err := c.namespaceLister.List(namespaceSelector)
 		if err != nil {
 			w.WriteHeader(http.StatusForbidden)
